@@ -1,0 +1,95 @@
+/* SKOL – design tokeny (podle design systému SKOL v Claude Design).
+   Názvy odpovídají knihovně komponent BSSHOP (Claude Design). Pro jiný e-shop
+   stačí přepsat hodnoty v tomto souboru, komponenty zůstávají stejné.
+   Breakpointy (šířka plátna = min-width): XXS 320 · XS 420 · S 550 · M 820 · L 1000 · XL 1362 · XXL 1745.
+   Nad 1745 px je obsah na střed v max. šířce 1745 px. Pod 1000 px hamburger menu. */
+:root {
+  color-scheme: light;
+
+  /* Plochy */
+  --c-bg: #FFFFFF;
+  --c-surface: #F6F7F7;
+  --c-surface-2: #EEF1F2;
+  --c-img: #EEF1F2;
+  --c-banner: #DCEBF3;
+
+  /* Text */
+  --c-ink: #2B3033;
+  --c-ink-2: #3E4A50;
+  --c-muted: #5A666C;
+  --c-subtle: #66737A;
+  --c-on-ink: #FFFFFF;
+
+  /* Linky a pole */
+  --c-line: #E1E5E7;
+  --c-line-2: #D0D6D9;
+  --c-field: #87929A;   /* design systém SKOL: kontrast 3,2 : 1 */
+
+  /* Značka */
+  --c-primary: #0077B3;
+  --c-primary-hover: #005F8F;
+  --c-on-primary: #FFFFFF;
+  --c-dark: #2E4047;
+  --c-dark-hover: #1F2D33;
+  --c-on-dark: #FFFFFF;
+  --c-brand-red: #B40808;
+
+  /* Štítky a ceny */
+  --c-badge-new: #0077B3;
+  --c-on-badge-new: #FFFFFF;
+  --c-badge-tip: #FA8231;
+  --c-on-badge-tip: #2B3033;
+  --c-bubble: #F7B731;
+  --c-on-bubble: #2B3033;
+  --c-price-sale: #B40808;
+
+  /* Stavy */
+  --c-ok: #007A1A;      /* design systém SKOL: 5,2 : 1 i na c-surface */
+  --c-warn: #A35A00;
+  --c-err: #B40808;
+  --c-focus: #005F8F;
+  --c-overlay: rgba(20, 30, 35, 0.45);
+
+  /* Sekce */
+  --c-topbar: #F6F7F7;
+  --c-nav-bg: #0077B3;
+  --c-on-nav: #FFFFFF;
+  --c-nav-hover: #005F8F;
+  --c-contact-bg: #0077B3;
+  --c-on-contact: #FFFFFF;
+  --c-footer: #F6F7F7;
+  --c-footer-brand: #0077B3;      /* patička v barvě značky (= c-primary) */
+  --c-on-footer-brand: #FFFFFF;    /* 4,9 : 1 */
+  --c-footer-brand-muted: #F2F8FB; /* 4,6 : 1 na c-footer-brand */
+  --c-footer-brand-line: rgba(255, 255, 255, 0.28);
+
+  /* Typografie */
+  --font-body: 'Open Sans', 'Segoe UI', Arial, sans-serif;
+  --fs-xs: 12px;
+  --fs-s: 13px;
+  --fs-m: 15px;
+  --fs-l: 17px;
+  --fs-h3: 20px;
+  --fs-h2: 24px;
+  --fs-h1: 26px;
+
+  /* Tvar */
+  --r-s: 3px;
+  --r-m: 4px;
+  --r-pill: 999px;
+  --shadow-pop: 0 12px 24px rgba(20, 30, 35, 0.14);
+  --shadow-card: 0 8px 24px rgba(20, 30, 35, 0.12);
+  --shadow-elevated: 0 2px 8px rgba(20, 30, 35, 0.16);
+
+  /* Rozvržení – mění se podle breakpointu */
+  --max: 1745px;
+  --gutter: 16px;
+  --gap: 12px;
+  --section: 32px;
+}
+
+@media (min-width: 550px) { :root { --gutter: 20px; } }
+@media (min-width: 820px) { :root { --gutter: 24px; --gap: 16px; --section: 44px; --fs-h1: 28px; } }
+@media (min-width: 1000px) { :root { --gutter: 32px; --section: 52px; --fs-h2: 26px; --fs-h1: 30px; } }
+@media (min-width: 1362px) { :root { --gutter: 40px; --gap: 24px; --section: 56px; --fs-h2: 28px; --fs-h1: 32px; } }
+@media (min-width: 1745px) { :root { --gutter: 48px; } }

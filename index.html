@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>SKOL – vše pro běžky</title>
+<meta name="description" content="Běžky, boty, vázání a hole. Vlastní výroba vázání v Dražicích, montáž a půjčovna.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&amp;display=swap">
+<link rel="stylesheet" href="assets/css/tokens.css">
+<link rel="stylesheet" href="assets/css/base.css">
+<link rel="stylesheet" href="assets/css/components.css">
+</head>
+<body data-page="home">
+<header id="site-header"></header>
+<main id="main">
+<section id="hero" class="hero" aria-label="Hlavní nabídka"></section>
+
+<section class="uspbar" aria-label="Proč nakoupit u nás">
+  <div class="wrap"><ul class="usps usps--strip" id="usps"></ul></div>
+</section>
+
+<section class="section" aria-labelledby="h-tiles">
+  <div class="wrap">
+    <div class="shead"><h2 id="h-tiles">Co hledáte?</h2></div>
+    <ul class="tiles" id="tiles"></ul>
+  </div>
+</section>
+
+<section class="section section--surface" aria-labelledby="h-akce">
+  <div class="wrap">
+    <div class="shead"><h2 id="h-akce">Akční produkty</h2><div class="shead__arrows"><button type="button" class="ibtn ibtn--elevated" data-prev aria-label="Předchozí produkty"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m15 6-6 6 6 6"/></svg></button><button type="button" class="ibtn ibtn--elevated" data-next aria-label="Další produkty"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg></button></div></div>
+    <div class="tabs" role="tablist" aria-label="Výběr produktů" id="home-tabs">
+      <button type="button" class="tab" role="tab" data-tab="akce" aria-selected="true">Akce</button>
+      <button type="button" class="tab" role="tab" data-tab="best" aria-selected="false">Nejprodávanější</button>
+      <button type="button" class="tab" role="tab" data-tab="vyprodej" aria-selected="false">Výprodej −40 % a více</button>
+    </div>
+    <div id="home-products" role="tabpanel"></div>
+  </div>
+</section>
+
+<section class="section" aria-labelledby="h-brands">
+  <div class="wrap">
+    <div class="shead"><h2 id="h-brands">Značky</h2></div>
+    <ul class="brands" id="brands"></ul>
+  </div>
+</section>
+
+<section class="section" style="padding-top:0" aria-labelledby="h-poradna">
+  <div class="wrap">
+    <div class="shead"><h2 id="h-poradna">Poradna</h2><a class="shead__link" href="stranka.html#poradna">Všechny návody</a></div>
+    <ul class="articles" id="articles"></ul>
+  </div>
+</section>
+
+<section class="section section--surface" aria-label="O obchodě">
+  <div class="wrap" id="seo"></div>
+</section>
+</main>
+<div id="contact-band"></div>
+<footer id="site-footer"></footer>
+<script src="assets/js/data.js"></script>
+<script src="assets/js/app.js"></script>
+</body>
+</html>
