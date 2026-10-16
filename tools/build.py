@@ -1,149 +1,209 @@
-"""Sestaví HTML stránky prototypu SKOL ze sdílené hlavičky a obsahu stránek.
+#!/usr/bin/env python3
+"""Sestaví web ze zdrojových komponent návrhu (src/*.dc.html).
 
-Použití:  python3 tools/build.py
-Výstup:   *.html v kořeni projektu (zdrojem jsou šablony níže).
-Volitelně --artifact <složka>: kopie pro náhled na claude.ai (úvodní stránka bez <html>/<head>, odkazy na úvod jako "./").
+Výstup:
+  assets/js/components.js  – všechny komponenty (šablona jako strom, logika, styly do <head>)
+  *.html                   – jedna stránka na každý artboard ze seznamu PAGES
+
+Spuštění z kořene repozitáře:  python3 tools/build.py
+Bez závislostí (jen standardní knihovna Pythonu 3.8+).
 """
-import os, shutil, sys
+import html
+import json
+import os
+import re
+import sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+SRC = os.path.join(ROOT, 'src')
+IMG = os.path.join(ROOT, 'assets', 'img')
 
-HEAD = """<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>{title}</title>
-<meta name="description" content="{desc}">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&amp;display=swap">
-<link rel="stylesheet" href="assets/css/tokens.css">
-<link rel="stylesheet" href="assets/css/base.css">
-<link rel="stylesheet" href="assets/css/components.css">"""
-
-SHELL_TOP = '<header id="site-header"></header>\n<main id="main">\n'
-SHELL_BOTTOM = '\n</main>\n<div id="contact-band"></div>\n<footer id="site-footer"></footer>\n<script src="assets/js/data.js"></script>\n<script src="assets/js/app.js"></script>'
-
-ARROWS = '<div class="shead__arrows"><button type="button" class="ibtn ibtn--elevated" data-prev aria-label="Předchozí produkty"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m15 6-6 6 6 6"/></svg></button><button type="button" class="ibtn ibtn--elevated" data-next aria-label="Další produkty"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg></button></div>'
-
+# Artboard → soubor stránky. Komponenty, které nejsou stránkou (Header, Footer, ProductCard), tu nejsou.
 PAGES = {
-  'index.html': dict(page='home', title='SKOL – vše pro běžky', desc='Běžky, boty, vázání a hole. Vlastní výroba vázání v Dražicích, montáž a půjčovna.', body=f"""
-<section id="hero" class="hero" aria-label="Hlavní nabídka"></section>
-
-<section class="uspbar" aria-label="Proč nakoupit u nás">
-  <div class="wrap"><ul class="usps usps--strip" id="usps"></ul></div>
-</section>
-
-<section class="section" aria-labelledby="h-tiles">
-  <div class="wrap">
-    <div class="shead"><h2 id="h-tiles">Co hledáte?</h2></div>
-    <ul class="tiles" id="tiles"></ul>
-  </div>
-</section>
-
-<section class="section section--surface" aria-labelledby="h-akce">
-  <div class="wrap">
-    <div class="shead"><h2 id="h-akce">Akční produkty</h2>{ARROWS}</div>
-    <div class="tabs" role="tablist" aria-label="Výběr produktů" id="home-tabs">
-      <button type="button" class="tab" role="tab" data-tab="akce" aria-selected="true">Akce</button>
-      <button type="button" class="tab" role="tab" data-tab="best" aria-selected="false">Nejprodávanější</button>
-      <button type="button" class="tab" role="tab" data-tab="vyprodej" aria-selected="false">Výprodej −40 % a více</button>
-    </div>
-    <div id="home-products" role="tabpanel"></div>
-  </div>
-</section>
-
-<section class="section" aria-labelledby="h-brands">
-  <div class="wrap">
-    <div class="shead"><h2 id="h-brands">Značky</h2></div>
-    <ul class="brands" id="brands"></ul>
-  </div>
-</section>
-
-<section class="section" style="padding-top:0" aria-labelledby="h-poradna">
-  <div class="wrap">
-    <div class="shead"><h2 id="h-poradna">Poradna</h2><a class="shead__link" href="stranka.html#poradna">Všechny návody</a></div>
-    <ul class="articles" id="articles"></ul>
-  </div>
-</section>
-
-<section class="section section--surface" aria-label="O obchodě">
-  <div class="wrap" id="seo"></div>
-</section>"""),
-
-  'kategorie.html': dict(page='category', title='Běžecké lyžování | SKOL', desc='Běžky, boty na běžky, vázání a hole.', body="""
-<div id="crumbs"></div>
-<div class="wrap">
-  <div class="cathead" id="cathead"></div>
-  <section id="cat-styles" aria-label="Výběr podle stylu" style="padding-bottom:24px"><ul class="guides"></ul></section>
-  <div class="listing" id="listing"></div>
-</div>
-<section class="section section--surface" aria-label="O kategorii">
-  <div class="wrap" id="seo"></div>
-</section>"""),
-
-  'detail.html': dict(page='detail', title='Detail produktu | SKOL', desc='Detail produktu SKOL.', body=f"""
-<div id="crumbs"></div>
-<div class="wrap">
-  <div class="pdp" id="pdp"></div>
-  <section class="pinfo" id="pinfo" aria-label="Informace o produktu"></section>
-</div>
-<section class="section section--surface" aria-labelledby="h-sim">
-  <div class="wrap">
-    <div class="shead"><h2 id="h-sim">Podobné produkty</h2>{ARROWS}</div>
-    <div id="similar"></div>
-  </div>
-</section>
-<section class="section" aria-labelledby="h-ext">
-  <div class="wrap">
-    <div class="shead"><h2 id="h-ext">Doplňte výbavu</h2>{ARROWS}</div>
-    <div id="extras"></div>
-  </div>
-</section>"""),
-
-  'kosik.html': dict(page='cart', title='Košík | SKOL', desc='Nákupní košík.', body=f"""
-<div class="wrap">
-  <div style="height:16px"></div>
-  <div class="cart" id="cart"></div>
-</div>
-<section class="section section--surface" id="cart-best" aria-labelledby="h-best" hidden>
-  <div class="wrap">
-    <div class="shead"><h2 id="h-best">Nejprodávanější</h2>{ARROWS}</div>
-    <div id="cart-best-list"></div>
-  </div>
-</section>"""),
-
-  'stranka.html': dict(page='page', title='SKOL', desc='Informace SKOL.', body="""
-<div id="crumbs"></div>
-<div class="wrap"><article class="page" id="page"></article></div>"""),
+    'HP': 'index.html',
+    'Kategorie': 'kategorie.html',
+    'Detail': 'detail.html',
+    'Kosik': 'kosik.html',
+    'Stranka': 'o-nas.html',
+    'StrankaAkce': 'akce.html',
+    'StrankaKontakt': 'kontakt.html',
+    'StrankaObchodniPodminky': 'obchodni-podminky.html',
+    'StrankaPoradna': 'poradna.html',
+    'StrankaProdejny': 'prodejny.html',
+    'StrankaPujcovna': 'pujcovna.html',
+    'StrankaReklamace': 'reklamace.html',
+    'StrankaVelkoobchod': 'velkoobchod.html',
+    'Main': 'prehled.html',
+    'Ikony': 'ikony.html',
 }
 
+VOID = {'area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input', 'link', 'meta', 'source', 'track', 'wbr'}
+RAW_TEXT = {'script', 'style'}
 
-def full(name, cfg):
-    return ('<!doctype html>\n<html lang="cs">\n<head>\n' + HEAD.format(**cfg) + '\n</head>\n'
-            '<body data-page="' + cfg['page'] + '">\n' + SHELL_TOP + cfg['body'].strip('\n') + SHELL_BOTTOM + '\n</body>\n</html>\n')
+TOKEN = re.compile(r'<!--.*?-->|<(/?)([A-Za-z][A-Za-z0-9:-]*)((?:\s+[^\s=/>]+(?:\s*=\s*(?:"[^"]*"|\'[^\']*\'|[^\s>]+))?)*)\s*(/?)>', re.S)
+ATTR = re.compile(r'([^\s=/>]+)(?:\s*=\s*("([^"]*)"|\'([^\']*)\'|([^\s>]+)))?')
+
+
+def parse(src):
+    """Jednoduchý tolerantní parser HTML šablony → strom [tag, {attrs}, [děti]] / text.
+    Zachovává velikost písmen v názvech atributů (onClick, viewBox) a nepřesouvá prvky
+    (na rozdíl od prohlížeče, který by <sc-for> uvnitř <tbody> vystrčil ven)."""
+    root = ['#root', {}, []]
+    stack = [root]
+    pos = 0
+    while True:
+        m = TOKEN.search(src, pos)
+        text = src[pos:m.start() if m else len(src)]
+        if text:
+            stack[-1][2].append(html.unescape(text))
+        if not m:
+            break
+        pos = m.end()
+        tok = m.group(0)
+        if tok.startswith('<!--'):
+            continue
+        closing, tag, attrs_s, selfclose = m.group(1), m.group(2), m.group(3), m.group(4)
+        if closing:
+            for i in range(len(stack) - 1, 0, -1):
+                if stack[i][0] == tag:
+                    del stack[i:]
+                    break
+            continue
+        attrs = {}
+        for a in ATTR.finditer(attrs_s or ''):
+            name = a.group(1)
+            if a.group(2) is None:
+                val = ''
+            else:
+                val = a.group(3) if a.group(3) is not None else (a.group(4) if a.group(4) is not None else a.group(5))
+                val = html.unescape(val)
+            attrs[name] = val
+        node = [tag, attrs, []]
+        stack[-1][2].append(node)
+        if tag.lower() in RAW_TEXT:
+            end = re.compile(r'</%s\s*>' % tag, re.I).search(src, pos)
+            node[2].append(src[pos:end.start()] if end else src[pos:])
+            pos = end.end() if end else len(src)
+            continue
+        if not selfclose and tag.lower() not in VOID:
+            stack.append(node)
+    return root[2]
+
+
+def strip_ws(nodes, pre=False):
+    """Odstraní čistě bílé textové uzly mezi prvky (jako odsazení ve zdroji)."""
+    out = []
+    for n in nodes:
+        if isinstance(n, str):
+            if not pre and n.strip() == '' and '\n' in n:
+                continue
+            out.append(n)
+        else:
+            tag = n[0].lower()
+            n[2] = n[2] if tag in RAW_TEXT else strip_ws(n[2], pre or tag in ('pre', 'textarea'))
+            out.append(n)
+    return out
+
+
+def find(nodes, tag):
+    for n in nodes:
+        if isinstance(n, list):
+            if n[0].lower() == tag:
+                return n
+            r = find(n[2], tag)
+            if r is not None:
+                return r
+    return None
+
+
+def serialize(nodes):
+    """Strom zpět na HTML (pro obsah <helmet>)."""
+    out = []
+    for n in nodes:
+        if isinstance(n, str):
+            out.append(n)
+            continue
+        tag, attrs, kids = n
+        a = ''.join(' %s="%s"' % (k, html.escape(v, quote=True)) if v != '' else ' ' + k for k, v in attrs.items())
+        if tag.lower() in VOID:
+            out.append('<%s%s>' % (tag, a))
+        else:
+            inner = kids[0] if tag.lower() in RAW_TEXT and kids else serialize(kids)
+            out.append('<%s%s>%s</%s>' % (tag, a, inner, tag))
+    return ''.join(out)
+
+
+def load(name):
+    with open(os.path.join(SRC, name + '.dc.html'), encoding='utf-8') as f:
+        src = f.read()
+    title = re.search(r'<title>(.*?)</title>', src, re.S)
+    lang = re.search(r'<html[^>]*\blang="([^"]+)"', src)
+    xdc = re.search(r'<x-dc>(.*)</x-dc>', src, re.S)
+    script = re.search(r'<script type="text/x-dc"[^>]*data-props=\'([^\']*)\'[^>]*>(.*?)</script>', src, re.S)
+    tree = strip_ws(parse(xdc.group(1)))
+    helmet = find(tree, 'helmet')
+    helmet_html = serialize(helmet[2]).strip() if helmet else ''
+    if helmet:
+        tree = [n for n in tree if n is not helmet]
+    props = json.loads(html.unescape(script.group(1))) if script else {}
+    return {
+        'title': html.unescape(title.group(1).strip()) if title else name,
+        'lang': lang.group(1) if lang else 'cs',
+        'helmet': helmet_html,
+        'tree': tree,
+        'preview': props.get('$preview'),
+        'logic': script.group(2).strip() if script else 'class Component extends DCLogic { renderVals() { return {}; } }',
+    }
+
+
+def image_map():
+    m = {}
+    for f in sorted(os.listdir(IMG)):
+        stem, ext = os.path.splitext(f)
+        if re.fullmatch(r'[0-9a-f]{32}', stem):
+            m[stem] = 'assets/img/' + f
+    return m
+
+
+PAGE_TMPL = '''<!doctype html>
+<html lang="{lang}">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{title}</title>
+<style>html,body{{overflow-x:hidden;overflow-x:clip}}</style>
+<!-- Vygenerováno skriptem tools/build.py ze src/{name}.dc.html – needitujte ručně, upravte zdroj a spusťte build. -->
+</head>
+<body>
+<div id="app"></div>
+<noscript>Pro zobrazení stránky povolte JavaScript.</noscript>
+<script src="assets/js/components.js"></script>
+<script src="assets/js/dc-runtime.js"></script>
+<script>DC.mount({name_js}, document.getElementById('app'));</script>
+</body>
+</html>
+'''
 
 
 def main():
-    for name, cfg in PAGES.items():
-        with open(os.path.join(ROOT, name), 'w', encoding='utf-8') as f:
-            f.write(full(name, cfg))
-        print('napsáno', name)
-    if '--artifact' in sys.argv:
-        out = sys.argv[sys.argv.index('--artifact') + 1]
-        if os.path.exists(out):
-            shutil.rmtree(out)
-        shutil.copytree(os.path.join(ROOT, 'assets'), os.path.join(out, 'assets'))
-        for name, cfg in PAGES.items():
-            html = full(name, cfg).replace('href="index.html"', 'href="./"')
-            if name == 'index.html':
-                # Artifact obalí úvodní stránku vlastní kostrou – vynechat doctype/html/head/body.
-                head = HEAD.format(**cfg).replace('<meta charset="utf-8">\n', '').replace('<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">\n', '')
-                html = head + '\n' + SHELL_TOP + cfg['body'].strip('\n') + SHELL_BOTTOM + '\n'
-            with open(os.path.join(out, name), 'w', encoding='utf-8') as f:
-                f.write(html)
-        js = os.path.join(out, 'assets', 'js', 'app.js')
-        s = open(js, encoding='utf-8').read().replace("href=\"index.html\"", 'href="./"')
-        open(js, 'w', encoding='utf-8').write(s)
-        print('artifact →', out)
+    names = sorted(f[:-len('.dc.html')] for f in os.listdir(SRC) if f.endswith('.dc.html'))
+    comps = {n: load(n) for n in names}
+    links = {n + '.dc.html': PAGES[n] for n in names if n in PAGES}
+    data = {'components': comps, 'links': links, 'images': image_map()}
+    js = ('/* Vygenerováno skriptem tools/build.py ze src/*.dc.html – needitujte ručně. */\n'
+          'window.DC_DATA = ' + json.dumps(data, ensure_ascii=False, separators=(',', ':')) + ';\n')
+    # logiku vkládáme jako zdrojový text; </script> uvnitř řetězce by HTML stránku nerozbil, ale pro jistotu:
+    js = js.replace('</script', '<\\/script')
+    with open(os.path.join(ROOT, 'assets', 'js', 'components.js'), 'w', encoding='utf-8') as f:
+        f.write(js)
+    for n, page in PAGES.items():
+        if n not in comps:
+            print('chybí src/%s.dc.html – stránka %s přeskočena' % (n, page), file=sys.stderr)
+            continue
+        c = comps[n]
+        with open(os.path.join(ROOT, page), 'w', encoding='utf-8') as f:
+            f.write(PAGE_TMPL.format(lang=c['lang'], title=html.escape(c['title']), name=n, name_js=json.dumps(n)))
+    print('Hotovo: %d komponent, %d stránek, %d obrázků' % (len(comps), len([n for n in PAGES if n in comps]), len(data['images'])))
 
 
 if __name__ == '__main__':
