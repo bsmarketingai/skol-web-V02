@@ -1,0 +1,497 @@
+<!doctype html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<title>SKOL – košík</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#0077B3}a:hover{color:#005F8F}
+input,select,textarea{font:inherit}
+input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #0077B3;outline-offset:1px}
+</style>
+</helmet>
+<div style="width: 100%; background: #FFFFFF; font-family: 'Open Sans', 'Segoe UI', Arial, sans-serif; color: #2B3033; font-size: 15px; line-height: 1.55">
+  <dc-import name="Header" cart-count="{{count}}" hint-size="100%,170px"></dc-import>
+
+  <main style="max-width: 1745px; margin: 0 auto; padding: 20px {{gut}}px 40px; box-sizing: border-box">
+    <!-- CheckoutSteps: 3 kroky jako na skol.net (popisek nad číslem, spojovací čáry) -->
+    <ol aria-label="Kroky objednávky" style="display: grid; grid-template-columns: auto minmax(24px, 1fr) auto minmax(24px, 1fr) auto; align-items: end; margin: 8px 0 32px; padding: 0 {{stepPad}}px; list-style: none">
+      <li aria-current="{{st1.cur}}"><button type="button" onClick="{{st1.go}}" onMouseEnter="{{st1.enter}}" onMouseLeave="{{st1.leave}}" style="{{st1.btn}}"><span style="{{st1.lab}}">Nákupní košík</span><span style="{{st1.num}}">{{st1.mark}}</span></button></li>
+      <li aria-hidden="true" style="align-self: end; height: 3px; margin: 0 8px 17px; border-radius: 2px; background: {{line1}}"></li>
+      <li aria-current="{{st2.cur}}"><button type="button" onClick="{{st2.go}}" onMouseEnter="{{st2.enter}}" onMouseLeave="{{st2.leave}}" style="{{st2.btn}}"><span style="{{st2.lab}}">Kontaktní údaje</span><span style="{{st2.num}}">{{st2.mark}}</span></button></li>
+      <li aria-hidden="true" style="align-self: end; height: 3px; margin: 0 8px 17px; border-radius: 2px; background: {{line2}}"></li>
+      <li aria-current="{{st3.cur}}"><button type="button" onClick="{{st3.go}}" onMouseEnter="{{st3.enter}}" onMouseLeave="{{st3.leave}}" style="{{st3.btn}}"><span style="{{st3.lab}}">Kontrola údajů</span><span style="{{st3.num}}">{{st3.mark}}</span></button></li>
+    </ol>
+
+    <!-- ===================== Hotovo (prototyp) ===================== -->
+    <sc-if value="{{done}}" hint-placeholder-val="{{false}}">
+      <div style="max-width: 640px; margin: 24px auto 40px; padding: 32px; box-sizing: border-box; border-radius: 6px; background: #F6F7F7; text-align: center">
+        <span style="display: inline-flex; align-items: center; justify-content: center; width: 56px; height: 56px; border-radius: 4px; background: #E8F5EB; color: #007A1A"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"></path><path d="M9 12l2 2l4 -4"></path></svg></span>
+        <h1 style="margin: 16px 0 6px; font-size: {{h1}}px; font-weight: 800">Děkujeme za objednávku</h1>
+        <p style="margin: 0 0 20px; color: #3E4A50">Potvrzení jsme poslali na váš e-mail. Tady prototyp končí – odeslání bude napojené na e-shopovou platformu.</p>
+        <button type="button" onClick="{{restart}}" onMouseEnter="{{hv.rs.enter}}" onMouseLeave="{{hv.rs.leave}}" style="{{hv.rs.outline}}">Zpět na začátek košíku</button>
+      </div>
+    </sc-if>
+
+    <!-- ===================== Krok 1: Nákupní košík ===================== -->
+    <sc-if value="{{s1}}" hint-placeholder-val="{{true}}">
+      <sc-if value="{{empty}}" hint-placeholder-val="{{false}}">
+        <div style="padding: 32px 0">
+          <h1 style="margin: 0; font-size: {{h1}}px; font-weight: 800">Košík je prázdný</h1>
+          <p style="margin: 8px 0 20px; color: #5A666C">Vyberte si z nejprodávanějších produktů nebo projděte kategorie.</p>
+          <a href="Kategorie.dc.html" onMouseEnter="{{hv.emp.enter}}" onMouseLeave="{{hv.emp.leave}}" style="display: inline-flex; align-items: center; min-height: 48px; padding: 0 22px; border-radius: 4px; background: {{hv.emp.fill}}; color: #FFFFFF; font-weight: 700; text-decoration: none; transition: background-color 0.15s">Běžecké lyžování</a>
+          <button type="button" onClick="{{restore}}" onMouseEnter="{{hv.rest.enter}}" onMouseLeave="{{hv.rest.leave}}" style="display: block; margin-top: 16px; padding: 0; border: 0; background: none; color: {{hv.rest.link}}; font: inherit; font-size: 14px; text-decoration: underline; cursor: pointer; transition: color 0.15s">Obnovit ukázkový košík</button>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{full}}" hint-placeholder-val="{{true}}">
+        <h1 style="margin: 0 0 16px; font-size: {{h1}}px; font-weight: 800">Nákupní košík</h1>
+        <!-- CartTable: sloupce Název · Dostupnost · Množství · Cena s DPH (m. j.) · Cena celkem s DPH -->
+        <div role="table" aria-label="Obsah košíku" style="display: flex; flex-direction: column">
+          <sc-if value="{{desk}}" hint-placeholder-val="{{true}}">
+            <div role="row" style="display: grid; grid-template-columns: {{rowCols}}; gap: 16px; align-items: center; padding: 0 0 10px; border-bottom: 1px solid #E1E5E7; font-size: 13px; font-weight: 600; color: #5A666C">
+              <span role="columnheader">Název</span><span role="columnheader">Dostupnost</span><span role="columnheader">Množství</span><span role="columnheader" style="text-align: right">Cena s DPH (m. j.)</span><span role="columnheader" style="text-align: right">Cena celkem s DPH</span><span></span>
+            </div>
+          </sc-if>
+          <sc-for list="{{items}}" as="it" hint-placeholder-count="2">
+            <div role="row" onMouseEnter="{{it.row.enter}}" onMouseLeave="{{it.row.leave}}" style="display: grid; grid-template-columns: {{rowCols}}; gap: 12px 16px; align-items: center; padding: 14px 0; border-bottom: 1px solid #E1E5E7">
+              <div role="cell" style="display: flex; align-items: center; gap: 14px; min-width: 0; grid-column: {{nameSpan}}">
+                <a href="Detail.dc.html" onMouseEnter="{{it.im.enter}}" onMouseLeave="{{it.im.leave}}" style="display: block; flex-shrink: 0; width: {{thumb}}px; height: {{thumb}}px; overflow: hidden; border-radius: 4px; background: #FFFFFF"><img src="{{it.img}}" alt="" style="display: block; width: 100%; height: 100%; object-fit: contain; transform: scale({{it.im.z}}); transition: transform 0.3s ease"></a>
+                <span style="display: flex; flex-direction: column; gap: 2px; min-width: 0">
+                  <a href="Detail.dc.html" onMouseEnter="{{it.nm.enter}}" onMouseLeave="{{it.nm.leave}}" style="color: {{it.nm.ink}}; font-weight: 700; line-height: 1.35; text-decoration: {{it.nm.ul}}; text-underline-offset: 3px; transition: color 0.15s">{{it.name}}</a>
+                  <span style="font-size: 13px; color: #5A666C">Kód {{it.code}}</span>
+                </span>
+              </div>
+              <span role="cell" style="display: inline-flex; align-items: center; gap: 6px; font-size: 14px; font-weight: 600; color: #007A1A"><span style="width: 8px; height: 8px; border-radius: 50%; background: currentColor"></span>Skladem</span>
+              <div role="cell" style="display: inline-flex; align-items: center; justify-self: start; height: 40px; box-sizing: border-box; border: 1px solid #D0D6D9; border-radius: 4px">
+                <button type="button" aria-label="Snížit množství produktu" disabled="{{it.minOff}}" onClick="{{it.minus}}" onMouseEnter="{{it.qm.enter}}" onMouseLeave="{{it.qm.leave}}" style="width: 38px; height: 100%; border: 0; border-radius: 4px 0 0 4px; background: {{it.qm.soft}}; font-size: 18px; color: {{it.minInk}}; cursor: {{it.minCur}}; transition: background-color 0.15s, color 0.15s">−</button>
+                <span style="min-width: 52px; text-align: center; font-weight: 700; white-space: nowrap">{{it.qty}} {{it.unit}}</span>
+                <button type="button" aria-label="Zvýšit množství produktu" onClick="{{it.plus}}" onMouseEnter="{{it.qp.enter}}" onMouseLeave="{{it.qp.leave}}" style="width: 38px; height: 100%; border: 0; border-radius: 0 4px 4px 0; background: {{it.qp.soft}}; font-size: 18px; color: {{it.qp.ink}}; cursor: pointer; transition: background-color 0.15s, color 0.15s">+</button>
+              </div>
+              <span role="cell" style="text-align: {{numAlign}}; font-size: 14px; color: #3E4A50; font-variant-numeric: tabular-nums"><sc-if value="{{mob}}" hint-placeholder-val="{{false}}"><span style="color: #5A666C">Cena za kus: </span></sc-if>{{it.unitPrice}}</span>
+              <b role="cell" style="text-align: right; font-size: 17px; font-variant-numeric: tabular-nums; color: {{it.priceColor}}">{{it.total}}</b>
+              <button type="button" aria-label="Odebrat produkt z košíku" title="Odebrat" onClick="{{it.remove}}" onMouseEnter="{{it.rm.enter}}" onMouseLeave="{{it.rm.leave}}" style="display: inline-flex; align-items: center; justify-content: center; justify-self: end; width: 40px; height: 40px; padding: 0; border: 0; border-radius: 4px; background: {{it.rm.dangerBg}}; color: {{it.rm.danger}}; cursor: pointer; transition: color 0.15s, background-color 0.15s"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7l16 0"></path><path d="M10 11l0 6"></path><path d="M14 11l0 6"></path><path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12"></path><path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3"></path></svg></button>
+            </div>
+          </sc-for>
+        </div>
+
+
+        <!-- Coupon: lišta přes celou šířku (popisek vlevo, pole + tlačítko vpravo) -->
+        <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 10px 24px; margin-top: 16px; padding: 10px 10px 10px 16px; border-radius: 6px; background: #F2F8FB">
+          <label for="kupon" style="display: flex; align-items: center; gap: 10px; flex: 1 1 260px; font-size: 15px; color: #005F8F"><span style="display: inline-flex; flex-shrink: 0; color: #0077B3"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 15l6 -6"></path><circle cx="9.5" cy="9.5" r=".5" fill="currentColor"></circle><circle cx="14.5" cy="14.5" r=".5" fill="currentColor"></circle><path d="M5 7.2a2.2 2.2 0 0 1 2.2 -2.2h1a2.2 2.2 0 0 0 1.55 -.64l.7 -.7a2.2 2.2 0 0 1 3.12 0l.7 .7a2.2 2.2 0 0 0 1.55 .64h1a2.2 2.2 0 0 1 2.2 2.2v1a2.2 2.2 0 0 0 .64 1.55l.7 .7a2.2 2.2 0 0 1 0 3.12l-.7 .7a2.2 2.2 0 0 0 -.64 1.55v1a2.2 2.2 0 0 1 -2.2 2.2h-1a2.2 2.2 0 0 0 -1.55 .64l-.7 .7a2.2 2.2 0 0 1 -3.12 0l-.7 -.7a2.2 2.2 0 0 0 -1.55 -.64h-1a2.2 2.2 0 0 1 -2.2 -2.2v-1a2.2 2.2 0 0 0 -.64 -1.55l-.7 -.7a2.2 2.2 0 0 1 0 -3.12l.7 -.7a2.2 2.2 0 0 0 .64 -1.55v-1"></path></svg></span>Mám slevový/dárkový kupón a chci ho uplatnit:</label>
+          <span style="display: flex; gap: 8px; flex: 1 1 360px; max-width: 700px">
+            <input id="kupon" type="text" value="{{coupon}}" onInput="{{onCoupon}}" placeholder="Kód kupónu" style="flex: 1; min-width: 0; height: 44px; padding: 0 14px; box-sizing: border-box; border: 1px solid #C3CACE; border-radius: 4px; background: #FFFFFF; font-size: 15px; color: #2B3033">
+            <button type="button" onClick="{{applyCoupon}}" onMouseEnter="{{hv.cp.enter}}" onMouseLeave="{{hv.cp.leave}}" style="{{hv.cp.dark}}; gap: 8px">Uplatnit<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7.5 7.5m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"></path><path d="M3 6v5.172a2 2 0 0 0 .586 1.414l7.71 7.71a2.41 2.41 0 0 0 3.408 0l5.592 -5.592a2.41 2.41 0 0 0 0 -3.408l-7.71 -7.71a2 2 0 0 0 -1.414 -.586h-5.172a3 3 0 0 0 -3 3z"></path></svg></button>
+          </span>
+          <sc-if value="{{couponMsg}}" hint-placeholder-val="{{false}}"><span style="flex-basis: 100%; font-size: 13px; color: #B40808">Kupón „{{coupon}}“ není platný.</span></sc-if>
+        </div>
+
+        <!-- FreeShipping: zelená lišta přes celou šířku, kolik chybí do dopravy zdarma (od 5 000 Kč) + ukazatel -->
+        <div role="status" style="display: flex; flex-direction: column; gap: 12px; margin-top: 12px; padding: 14px 16px 16px; border-radius: 6px; background: #E8F5EB; color: #1E5B2B">
+          <span style="display: flex; align-items: center; gap: 12px; font-size: 15px"><span style="display: inline-flex; flex-shrink: 0; color: #007A1A"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"></path><path d="M17 17m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"></path><path d="M5 17h-2v-4m-1 -8h11v12m-4 0h6m4 0h2v-6h-8m0 -5h5l3 5"></path><path d="M3 9l4 0"></path></svg></span><span>{{freeLead}}<b>{{freeStrong}}</b>{{freeTail}}<sc-if value="{{freeMissing}}" hint-placeholder-val="{{true}}"><b>dopravné zdarma</b></sc-if></span></span>
+          <span aria-hidden="true" style="position: relative; display: block; height: 6px; overflow: hidden; border-radius: 3px; background: #C7E5CE"><span style="position: absolute; left: 0; top: 0; bottom: 0; width: {{freePct}}%; border-radius: 3px; background: #007A1A; transition: width 0.3s ease"></span></span>
+        </div>
+
+        <!-- Gifts -->
+                <section aria-labelledby="h-gift" style="margin-top: 12px; padding: 14px 16px; border-radius: 6px; background: #F6F7F7">
+          <div style="display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 4px 16px; margin-bottom: 10px">
+            <h2 id="h-gift" style="margin: 0; font-size: 16px; font-weight: 700">Nakupte za více než 5 000 Kč a vyberte si dárek</h2>
+            <span style="font-size: 13px; font-weight: 600; color: {{giftNoteColor}}">{{giftNote}}</span>
+          </div>
+          <ul style="display: grid; grid-template-columns: {{giftCols}}; gap: 8px; margin: 0; padding: 0; list-style: none">
+            <sc-for list="{{gifts}}" as="g" hint-placeholder-count="5">
+              <li><button type="button" aria-pressed="{{g.pressed}}" disabled="{{g.off}}" onClick="{{g.pick}}" onMouseEnter="{{g.enter}}" onMouseLeave="{{g.leave}}" title="{{g.cta}}" style="{{g.card}}"><span style="display: block; width: 72px; height: 72px; flex-shrink: 0; overflow: hidden; border-radius: 4px; background: #FFFFFF"><img src="{{g.img}}" alt="" style="display: block; width: 100%; height: 100%; object-fit: contain; transform: scale({{g.z}}); transition: transform 0.3s ease"></span><span style="display: flex; flex-direction: column; min-width: 0; line-height: 1.3; text-align: left"><b style="font-size: 14px; line-height: 1.3; overflow: hidden; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2">{{g.name}}</b><span style="font-size: 12px; font-weight: 600; color: {{g.subInk}}">{{g.sub}}</span></span></button></li>
+            </sc-for>
+          </ul>
+        </section>
+
+        <!-- Země dodání · Způsob dopravy · Způsob platby: jednoduché řádky s přepínačem a ikonou (bez boxů), vše vedle sebe -->
+        <div style="display: grid; grid-template-columns: {{optCols}}; gap: 24px 48px; margin-top: 28px; padding-top: 24px; border-top: 1px solid #E1E5E7">
+          <fieldset style="margin: 0; padding: 0; border: 0; min-width: 0">
+            <legend style="padding: 0 0 8px; font-size: 18px; font-weight: 700">Země dodání</legend>
+            <div role="radiogroup" aria-label="Země dodání" style="display: flex; flex-direction: column">
+              <sc-for list="{{countries}}" as="o" hint-placeholder-count="2">
+                <button type="button" role="radio" aria-checked="{{o.aria}}" onClick="{{o.pick}}" onMouseEnter="{{o.enter}}" onMouseLeave="{{o.leave}}" style="{{o.row}}"><span style="{{o.dot}}"><span style="{{o.inner}}"></span></span><img src="{{o.icon}}" alt="" style="{{o.icoStyle}}"><span style="flex: 1; color: {{o.ink}}; transition: color 0.15s">{{o.label}}</span></button>
+              </sc-for>
+            </div>
+          </fieldset><fieldset style="margin: 0; padding: 0; border: 0; min-width: 0">
+            <legend style="padding: 0 0 8px; font-size: 18px; font-weight: 700">Způsob dopravy</legend>
+            <div role="radiogroup" aria-label="Způsob dopravy" style="display: flex; flex-direction: column">
+              <sc-for list="{{ships}}" as="o" hint-placeholder-count="2">
+                <button type="button" role="radio" aria-checked="{{o.aria}}" onClick="{{o.pick}}" onMouseEnter="{{o.enter}}" onMouseLeave="{{o.leave}}" style="{{o.row}}"><span style="{{o.dot}}"><span style="{{o.inner}}"></span></span><img src="{{o.icon}}" alt="" style="{{o.icoStyle}}"><span style="display: flex; flex-direction: column; flex: 1; line-height: 1.35"><span style="color: {{o.ink}}; transition: color 0.15s">{{o.label}}</span><span style="font-size: 13px; font-weight: 400; color: #5A666C">{{o.sub}}</span></span><span style="white-space: nowrap; font-weight: 600; color: {{o.priceInk}}">{{o.price}}</span></button>
+              </sc-for>
+            </div>
+          </fieldset>
+          
+          <fieldset style="margin: 0; padding: 0; border: 0; min-width: 0">
+            <legend style="padding: 0 0 8px; font-size: 18px; font-weight: 700">Způsob platby</legend>
+            <div role="radiogroup" aria-label="Způsob platby" style="display: flex; flex-direction: column">
+              <sc-for list="{{pays}}" as="o" hint-placeholder-count="3">
+                <button type="button" role="radio" aria-checked="{{o.aria}}" onClick="{{o.pick}}" onMouseEnter="{{o.enter}}" onMouseLeave="{{o.leave}}" style="{{o.row}}"><span style="{{o.dot}}"><span style="{{o.inner}}"></span></span><img src="{{o.icon}}" alt="" style="{{o.icoStyle}}"><span style="flex: 1; color: {{o.ink}}; transition: color 0.15s">{{o.label}}</span><span style="white-space: nowrap; font-weight: 600; color: {{o.priceInk}}">{{o.price}}</span></button>
+              </sc-for>
+            </div>
+            <sc-if value="{{payHint}}" hint-placeholder-val="{{false}}"><p style="margin: 4px 0 0 32px; font-size: 13px; color: #5A666C">Platba hotově je možná jen při osobním odběru.</p></sc-if>
+          </fieldset>
+        </div>
+        <sc-if value="{{err1}}" hint-placeholder-val="{{false}}"><p role="alert" style="margin: 16px 0 0; padding: 10px 14px; border-radius: 4px; background: #FCEEEE; font-size: 14px; font-weight: 600; color: #B40808">Vyberte prosím způsob dopravy a platby.</p></sc-if>
+      </sc-if>
+    </sc-if>
+
+    <!-- ===================== Krok 2: Kontaktní údaje ===================== -->
+    <sc-if value="{{s2}}" hint-placeholder-val="{{false}}">
+      <div style="display: grid; grid-template-columns: {{twoCols}}; gap: 32px {{colGap}}px; align-items: start">
+        <div style="display: flex; flex-direction: column; gap: 28px; min-width: 0">
+          <section aria-labelledby="h-acc">
+            <h2 id="h-acc" style="margin: 0 0 12px; font-size: 20px; font-weight: 700">Přihlášení a registrace</h2>
+            <!-- Volba zákazníka: dvě stejné dlaždice (nový zákazník / mám účet) -->
+            <div role="radiogroup" aria-label="Přihlášení a registrace" style="display: grid; grid-template-columns: {{accCols}}; gap: 12px">
+              <div style="{{mNew.card}}">
+                <button type="button" role="radio" aria-checked="{{mNew.aria}}" onClick="{{mNew.pick}}" onMouseEnter="{{mNew.enter}}" onMouseLeave="{{mNew.leave}}" style="display: flex; align-items: center; gap: 12px; width: 100%; padding: 0; border: 0; background: none; color: #2B3033; text-align: left; cursor: pointer"><span style="{{mNew.ico}}"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0"></path><path d="M16 19h6"></path><path d="M19 16v6"></path><path d="M6 21v-2a4 4 0 0 1 4 -4h4"></path></svg></span><span style="display: flex; flex-direction: column; flex: 1; line-height: 1.35"><b style="font-size: 16px">Jsem nový zákazník</b><span style="font-size: 13px; color: #5A666C">Nakoupím bez přihlášení</span></span><span style="{{mNew.dot}}"><span style="{{mNew.inner}}"></span></span></button>
+                <sc-if value="{{isNew}}" hint-placeholder-val="{{true}}">
+                  <button type="button" role="checkbox" aria-checked="{{acc.aria}}" onClick="{{acc.toggle}}" onMouseEnter="{{acc.enter}}" onMouseLeave="{{acc.leave}}" style="{{acc.row}}; margin-top: 8px; padding: 10px 12px; border-radius: 4px; background: #FFFFFF"><span style="{{acc.box}}"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5l10 -10"></path></svg></span><span style="display: flex; flex-direction: column; line-height: 1.35"><b>Vytvořit nový účet</b><span style="font-size: 13px; color: #5A666C">Uložíme vaše údaje a uvidíte historii objednávek</span></span></button>
+                </sc-if>
+              </div>
+              <div style="{{mLog.card}}">
+                <button type="button" role="radio" aria-checked="{{mLog.aria}}" onClick="{{mLog.pick}}" onMouseEnter="{{mLog.enter}}" onMouseLeave="{{mLog.leave}}" style="display: flex; align-items: center; gap: 12px; width: 100%; padding: 0; border: 0; background: none; color: #2B3033; text-align: left; cursor: pointer"><span style="{{mLog.ico}}"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 8v-2a2 2 0 0 1 2 -2h7a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-7a2 2 0 0 1 -2 -2v-2"></path><path d="M3 12h13l-3 -3"></path><path d="M13 15l3 -3"></path></svg></span><span style="display: flex; flex-direction: column; flex: 1; line-height: 1.35"><b style="font-size: 16px">Mám zde svůj účet</b><span style="font-size: 13px; color: #5A666C">Chci se přihlásit ke svému účtu</span></span><span style="{{mLog.dot}}"><span style="{{mLog.inner}}"></span></span></button>
+                <sc-if value="{{loginOpen}}" hint-placeholder-val="{{false}}">
+                  <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 10px">
+                    <label style="{{lbl}}">E-mail<input type="email" autocomplete="email" style="{{inp}}"></label>
+                    <label style="{{lbl}}">Heslo<input type="password" autocomplete="current-password" style="{{inp}}"></label>
+                    <button type="button" onMouseEnter="{{hv.lgo.enter}}" onMouseLeave="{{hv.lgo.leave}}" style="{{hv.lgo.dark}}">Přihlásit se</button>
+                  </div>
+                </sc-if>
+              </div>
+            </div>
+          </section>
+
+          <section aria-labelledby="h-bill">
+            <h2 id="h-bill" style="margin: 0 0 12px; font-size: 20px; font-weight: 700">Fakturační údaje</h2>
+            <button type="button" role="checkbox" aria-checked="{{co.aria}}" onClick="{{co.toggle}}" onMouseEnter="{{co.enter}}" onMouseLeave="{{co.leave}}" style="{{co.row}}"><span style="{{co.box}}"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5l10 -10"></path></svg></span>Nákup na firmu</button>
+            <sc-if value="{{company}}" hint-placeholder-val="{{false}}">
+              <div style="display: grid; grid-template-columns: {{fCols}}; gap: 12px 16px; margin: 12px 0 4px; padding: 16px; border-radius: 6px; background: #F6F7F7">
+                <label style="{{lbl}}; grid-column: 1 / -1">Společnost<input type="text" autocomplete="organization" style="{{inp}}"></label>
+                <label style="{{lbl}}">IČ<input type="text" inputmode="numeric" style="{{inp}}"></label>
+                <label style="{{lbl}}">DIČ<input type="text" placeholder="CZ12345678" style="{{inp}}"></label>
+                <button type="button" role="checkbox" aria-checked="{{vat.aria}}" onClick="{{vat.toggle}}" onMouseEnter="{{vat.enter}}" onMouseLeave="{{vat.leave}}" style="{{vat.row}}"><span style="{{vat.box}}"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5l10 -10"></path></svg></span>Plátce DPH</button>
+              </div>
+            </sc-if>
+            <div style="display: grid; grid-template-columns: {{fCols}}; gap: 14px 16px; margin-top: 12px">
+              <label style="{{lbl}}">Jméno <span style="color: #B40808">*</span><input type="text" autocomplete="given-name" style="{{inp}}"></label>
+              <label style="{{lbl}}">Příjmení <span style="color: #B40808">*</span><input type="text" autocomplete="family-name" style="{{inp}}"></label>
+              <label style="{{lbl}}">E-mail <span style="color: #B40808">*</span><input type="email" autocomplete="email" style="{{inp}}"></label>
+              <label style="{{lbl}}">Telefon <span style="color: #B40808">*</span><input type="tel" autocomplete="tel" style="{{inp}}"></label>
+              <label style="{{lbl}}; grid-column: 1 / -1">Ulice, čp. <span style="color: #B40808">*</span><input type="text" autocomplete="street-address" style="{{inp}}"></label>
+              <label style="{{lbl}}">PSČ <span style="color: #B40808">*</span><input type="text" autocomplete="postal-code" inputmode="numeric" style="{{inp}}"></label>
+              <label style="{{lbl}}">Město <span style="color: #B40808">*</span><input type="text" autocomplete="address-level2" style="{{inp}}"></label>
+              <label style="{{lbl}}">Země<select style="{{inp}}"><option>Česko</option><option>Slovensko</option></select></label>
+              <label style="{{lbl}}; grid-column: 1 / -1">Poznámka<textarea rows="3" style="{{inp}}; height: auto; padding: 10px 14px; resize: vertical"></textarea></label>
+            </div>
+            <span style="display: block; margin-top: 8px; font-size: 13px; color: #5A666C"><span style="color: #B40808">*</span> povinné údaje</span>
+          </section>
+
+          <section aria-label="Další volby" style="display: flex; flex-direction: column; gap: 4px; padding-top: 16px; border-top: 1px solid #E1E5E7">
+            <button type="button" role="checkbox" aria-checked="{{da.aria}}" onClick="{{da.toggle}}" onMouseEnter="{{da.enter}}" onMouseLeave="{{da.leave}}" style="{{da.row}}"><span style="{{da.box}}"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5l10 -10"></path></svg></span>Adresa dodání je jiná než adresa fakturační</button>
+            <sc-if value="{{diffAddr}}" hint-placeholder-val="{{false}}">
+              <div style="display: grid; grid-template-columns: {{fCols}}; gap: 12px 16px; margin: 8px 0 12px; padding: 16px; border-radius: 6px; background: #F6F7F7">
+                <label style="{{lbl}}">Jméno<input type="text" style="{{inp}}"></label>
+                <label style="{{lbl}}">Příjmení<input type="text" style="{{inp}}"></label>
+                <label style="{{lbl}}; grid-column: 1 / -1">Ulice, čp.<input type="text" style="{{inp}}"></label>
+                <label style="{{lbl}}">PSČ<input type="text" inputmode="numeric" style="{{inp}}"></label>
+                <label style="{{lbl}}">Město<input type="text" style="{{inp}}"></label>
+              </div>
+            </sc-if>
+            <button type="button" role="checkbox" aria-checked="{{hk.aria}}" onClick="{{hk.toggle}}" onMouseEnter="{{hk.enter}}" onMouseLeave="{{hk.leave}}" style="{{hk.row}}"><span style="{{hk.box}}"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5l10 -10"></path></svg></span>Nesouhlasím se zasláním dotazníku spokojenosti v rámci programu Heureka Ověřeno zákazníky, který pomáhá zlepšovat naše služby</button>
+            <button type="button" role="checkbox" aria-checked="{{nw.aria}}" onClick="{{nw.toggle}}" onMouseEnter="{{nw.enter}}" onMouseLeave="{{nw.leave}}" style="{{nw.row}}"><span style="{{nw.box}}"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5l10 -10"></path></svg></span>Mám zájem o zasílání novinek a akcí</button>
+          </section>
+        </div>
+
+        <!-- Obsah košíku (souhrn vpravo) -->
+        <aside aria-labelledby="h-sum" style="display: flex; flex-direction: column; gap: 12px; padding: 20px; box-sizing: border-box; border-radius: 6px; background: #F6F7F7; position: {{asidePos}}; top: 16px">
+          <h2 id="h-sum" style="margin: 0; font-size: 18px; font-weight: 700">Obsah košíku</h2>
+          <ul style="display: flex; flex-direction: column; gap: 10px; margin: 0; padding: 0; list-style: none">
+            <sc-for list="{{items}}" as="it" hint-placeholder-count="2">
+              <li style="display: grid; grid-template-columns: 48px minmax(0, 1fr) auto; gap: 10px; align-items: center; font-size: 14px"><span style="display: block; width: 48px; height: 48px; overflow: hidden; border-radius: 4px; background: #FFFFFF"><img src="{{it.img}}" alt="" style="display: block; width: 100%; height: 100%; object-fit: contain"></span><span style="display: flex; flex-direction: column; min-width: 0; line-height: 1.35"><span style="font-weight: 600">{{it.name}}</span><span style="font-size: 13px; color: #5A666C">{{it.qty}} {{it.unit}}</span></span><b style="white-space: nowrap; font-variant-numeric: tabular-nums">{{it.total}}</b></li>
+            </sc-for>
+          </ul>
+          <div style="display: flex; flex-direction: column; gap: 6px; padding-top: 12px; border-top: 1px solid #D0D6D9; font-size: 14px">
+            <sc-if value="{{hasGift}}" hint-placeholder-val="{{false}}"><div style="display: flex; justify-content: space-between; gap: 12px"><span>Dárek: {{giftName}}</span><b style="color: #007A1A">zdarma</b></div></sc-if>
+            <div style="display: flex; justify-content: space-between; gap: 12px"><span>Doprava: {{shipName}}</span><b>{{shipPrice}}</b></div>
+            <div style="display: flex; justify-content: space-between; gap: 12px"><span>Platba: {{payName}}</span><b>0 Kč</b></div>
+          </div>
+          <div style="display: flex; justify-content: space-between; gap: 12px; padding-top: 12px; border-top: 1px solid #D0D6D9; font-size: 18px; font-weight: 800"><span>Konečná cena s DPH:</span><span>{{grand}}</span></div>
+        </aside>
+      </div>
+    </sc-if>
+
+    <!-- ===================== Krok 3: Kontrola údajů ===================== -->
+    <sc-if value="{{s3}}" hint-placeholder-val="{{false}}">
+      <h1 style="margin: 0 0 16px; font-size: {{h1}}px; font-weight: 800">Kontrola údajů</h1>
+      <div style="display: grid; grid-template-columns: {{reviewCols}}; gap: 16px">
+        <section style="padding: 18px 20px; border-radius: 6px; background: #F6F7F7">
+          <div style="display: flex; justify-content: space-between; gap: 12px; margin-bottom: 8px"><h2 style="margin: 0; font-size: 16px; font-weight: 700">Fakturační údaje</h2><button type="button" onClick="{{toStep2}}" onMouseEnter="{{hv.e1.enter}}" onMouseLeave="{{hv.e1.leave}}" style="{{hv.e1.edit}}">Upravit</button></div>
+          <p style="margin: 0; font-size: 14px; line-height: 1.6; color: #3E4A50">Jan Novák<br>Hlavní 123<br>294 71 Benátky nad Jizerou<br>Česko<br>jan.novak@email.cz · +420 777 123 456</p>
+        </section>
+        <section style="padding: 18px 20px; border-radius: 6px; background: #F6F7F7">
+          <div style="display: flex; justify-content: space-between; gap: 12px; margin-bottom: 8px"><h2 style="margin: 0; font-size: 16px; font-weight: 700">Adresa dodání</h2><button type="button" onClick="{{toStep2}}" onMouseEnter="{{hv.e2.enter}}" onMouseLeave="{{hv.e2.leave}}" style="{{hv.e2.edit}}">Upravit</button></div>
+          <p style="margin: 0; font-size: 14px; line-height: 1.6; color: #3E4A50">Stejná jako fakturační adresa</p>
+        </section>
+        <section style="padding: 18px 20px; border-radius: 6px; background: #F6F7F7">
+          <div style="display: flex; justify-content: space-between; gap: 12px; margin-bottom: 8px"><h2 style="margin: 0; font-size: 16px; font-weight: 700">Doprava a platba</h2><button type="button" onClick="{{toStep1}}" onMouseEnter="{{hv.e3.enter}}" onMouseLeave="{{hv.e3.leave}}" style="{{hv.e3.edit}}">Upravit</button></div>
+          <p style="margin: 0; font-size: 14px; line-height: 1.6; color: #3E4A50">Doprava: <b>{{shipName}}</b> ({{shipPrice}})<br>Platba: <b>{{payName}}</b> (0 Kč)<br>Země dodání: {{countryName}}</p>
+        </section>
+      </div>
+
+      <h2 style="margin: 28px 0 0; font-size: 20px; font-weight: 700">Obsah objednávky</h2>
+      <div role="table" aria-label="Obsah objednávky" style="margin-top: 12px; border-top: 1px solid #E1E5E7">
+        <sc-for list="{{items}}" as="it" hint-placeholder-count="2">
+          <div role="row" style="display: grid; grid-template-columns: {{revRow}}; gap: 8px 16px; align-items: center; padding: 12px 0; border-bottom: 1px solid #E1E5E7; font-size: 14px">
+            <span role="cell" style="display: flex; align-items: center; gap: 12px; min-width: 0"><span style="display: block; flex-shrink: 0; width: 48px; height: 48px; overflow: hidden; border-radius: 4px; background: #FFFFFF"><img src="{{it.img}}" alt="" style="display: block; width: 100%; height: 100%; object-fit: contain"></span><span style="display: flex; flex-direction: column; min-width: 0; line-height: 1.35"><b>{{it.name}}</b><span style="font-size: 13px; color: #5A666C">Kód {{it.code}}</span></span></span>
+            <span role="cell" style="color: #5A666C; white-space: nowrap">{{it.qty}} {{it.unit}} × {{it.unitPrice}}</span>
+            <b role="cell" style="text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums">{{it.total}}</b>
+          </div>
+        </sc-for>
+        <sc-if value="{{hasGift}}" hint-placeholder-val="{{false}}">
+          <div style="display: flex; justify-content: space-between; gap: 12px; padding: 12px 0; border-bottom: 1px solid #E1E5E7; font-size: 14px"><span>Dárek: <b>{{giftName}}</b></span><b style="color: #007A1A">zdarma</b></div>
+        </sc-if>
+      </div>
+
+      <button type="button" role="checkbox" aria-checked="{{tc.aria}}" onClick="{{tc.toggle}}" onMouseEnter="{{tc.enter}}" onMouseLeave="{{tc.leave}}" style="{{tc.row}}; margin-top: 20px"><span style="{{tc.box}}"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5l10 -10"></path></svg></span><span>Souhlasím s <a href="Stranka.dc.html" style="font-weight: 600">obchodními podmínkami</a> a beru na vědomí <a href="Stranka.dc.html" style="font-weight: 600">zpracování osobních údajů</a></span></button>
+      <sc-if value="{{err3}}" hint-placeholder-val="{{false}}"><p role="alert" style="margin: 8px 0 0; font-size: 14px; font-weight: 600; color: #B40808">Pro odeslání objednávky je potřeba souhlas s obchodními podmínkami.</p></sc-if>
+    </sc-if>
+  </main>
+
+  <!-- OrderActionPanel: ukotvená tmavá lišta dole (Zpět · Poštovné a balné · Konečná cena s DPH · Pokračovat) -->
+  <sc-if value="{{bar}}" hint-placeholder-val="{{true}}">
+    <div style="position: sticky; bottom: 16px; z-index: 20; max-width: 1745px; margin: 0 auto 24px; padding: 0 {{gut}}px; box-sizing: border-box">
+      <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px 32px; padding: 12px 16px; border-radius: 6px; background: #F6F7F7; color: #2B3033">
+        <button type="button" onClick="{{back}}" onMouseEnter="{{hv.bk.enter}}" onMouseLeave="{{hv.bk.leave}}" style="display: inline-flex; align-items: center; gap: 8px; min-height: 48px; padding: 0 18px; border: 1px solid {{hv.bk.bline}}; border-radius: 4px; background: {{hv.bk.soft2}}; color: {{hv.bk.bink}}; font-size: 15px; font-weight: 600; cursor: pointer; transition: background-color 0.15s, color 0.15s"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="transform: translateX({{hv.bk.xb}}); transition: transform 0.15s"><path d="M9 14l-4 -4l4 -4"></path><path d="M5 10h11a4 4 0 1 1 0 8h-1"></path></svg>Zpět</button>
+        <div style="display: flex; flex: 1 1 auto; flex-wrap: wrap; align-items: baseline; justify-content: {{barJustify}}; gap: 6px 40px; font-variant-numeric: tabular-nums">
+          <span style="font-size: 14px; color: #5A666C">Poštovné a balné: <b style="font-size: 15px; color: #2B3033">{{shipPrice}}</b></span>
+          <span style="font-size: 15px; color: #2B3033">Konečná cena s DPH: <b style="font-size: 22px; font-weight: 800">{{grand}}</b></span>
+        </div>
+        <button type="button" onClick="{{next}}" onMouseEnter="{{hv.nx.enter}}" onMouseLeave="{{hv.nx.leave}}" style="display: inline-flex; align-items: center; justify-content: center; gap: 12px; flex: {{nextFlex}}; min-height: 52px; padding: 0 22px; border: 0; border-radius: 4px; background: {{hv.nx.fill}}; color: #FFFFFF; cursor: pointer; text-align: left; transition: background-color 0.15s"><span style="display: flex; flex-direction: column; line-height: 1.2"><b style="font-size: 16px">{{nextLabel}}</b><span style="font-size: 12px; opacity: 0.85">{{nextSub}}</span></span><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="transform: translateX({{hv.nx.x}}); transition: transform 0.15s"><path d="M12 3a9 9 0 1 0 0 18a9 9 0 0 0 0 -18"></path><path d="M16 12l-4 -4"></path><path d="M16 12h-8"></path><path d="M12 16l4 -4"></path></svg></button>
+      </div>
+    </div>
+  </sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"step":{"editor":"enum","options":["1","2","3"],"default":"1","section":"Stav","label":"Krok objednávky"},"$preview":{"width":1362,"height":1700}}'>
+class Component extends DCLogic {
+  componentDidMount() {
+    this._r = () => this.setState({ vw: window.innerWidth });
+    window.addEventListener('resize', this._r);
+    this._r();
+  }
+  componentWillUnmount() { window.removeEventListener('resize', this._r); }
+  renderVals() {
+    /* Košík ve 3 krocích podle skol.net: 1 Nákupní košík (zboží, dárek, kupón, země, doprava, platba),
+       2 Kontaktní údaje (registrace/přihlášení, fakturační údaje, volby, souhrn vpravo), 3 Kontrola údajů.
+       Dole je vždy ukotvená lišta Zpět · Poštovné a balné · Konečná cena s DPH · Pokračovat. */
+    const s = this.state || {};
+    const vw = s.vw || 1362;
+    const desk = vw >= 1000, mid = vw >= 820, sm = vw >= 550;
+    const gut = vw >= 1745 ? 48 : vw >= 1362 ? 40 : vw >= 1000 ? 32 : vw >= 820 ? 24 : vw >= 550 ? 20 : 16;
+    const step = s.step || Number(this.props.step || 1) || 1;
+    const START = [
+      { id: 'spine', name: 'SPINE RS Comfort', code: '0011808', img: '/_blob/16262e4b052e8d81b24742dd1c286b7f', price: 1780, old: 0, qty: 1, unit: 'pár' },
+      { id: 'fischer', name: 'set FISCHER Fibre Crown + vázání Tour Step IN', code: '0012762', img: '/_blob/60a9456fdff1e0176aa8766acd35a1ca', price: 2999, old: 5090, qty: 1, unit: 'pár' }
+    ];
+    const items = s.items || START;
+    const kc = (n) => String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, ' ') + ' Kč';
+    const upd = (id, fn) => this.setState({ items: items.map((x) => x.id === id ? fn(x) : x) });
+    const goods = items.reduce((a, x) => a + x.price * x.qty, 0);
+    const count = items.reduce((a, x) => a + x.qty, 0);
+    const FREE = 5000, GIFT = 5000;
+    const ship = s.ship || null, country = s.country || 'cz';
+    const pay = s.pay || null;
+    const shipCost = ship === 'dop' ? (goods >= FREE ? 0 : 130) : 0;
+    const grand = goods + shipCost;
+    const giftOk = goods >= GIFT;
+    const gift = giftOk ? (s.gift ?? null) : null;
+    const GIFTS = ['ponožky SKOL vel. S', 'ponožky SKOL vel. M', 'ponožky SKOL vel. L', 'ATOMIC RS T-SHIRT - Black vel. M', 'ATOMIC ALPS TECH CAP - SAGE'];
+    /* Hover */
+    const h = s.h || '';
+    const T = 'transition: background-color 0.15s, border-color 0.15s, color 0.15s, box-shadow 0.15s; ';
+    const hv = (k) => {
+      const on = h === k;
+      return {
+        on: on, enter: () => this.setState({ h: k }), leave: () => this.setState({ h: '' }),
+        ul: on ? 'underline' : 'none', ulInv: on ? 'none' : 'underline', ink: on ? '#0077B3' : '#2B3033', link: on ? '#005F8F' : '#0077B3',
+        soft: on ? '#F2F8FB' : 'transparent', z: on ? 1.05 : 1, x: on ? '3px' : '0', xb: on ? '-3px' : '0', light: on ? '#FFFFFF' : '#E8ECEE', bline: '#0077B3', bink: on ? '#005F8F' : '#0077B3', soft2: on ? '#F2F8FB' : '#FFFFFF', bg: on ? '#EEF1F2' : '#F6F7F7',
+        danger: on ? '#B40808' : '#5A666C', dangerBg: on ? '#FCEEEE' : 'transparent',
+        buy: on ? '#005C14' : '#007A1A', buyLift: on ? '0 6px 16px rgba(0, 92, 20, 0.28)' : 'none', fill: on ? '#005F8F' : '#0077B3',
+        dark: 'display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding: 0 20px; border: 0; border-radius: 4px; background: ' + (on ? '#005F8F' : '#0077B3') + '; color: #FFFFFF; font-size: 15px; font-weight: 600; cursor: pointer; white-space: nowrap; ' + T,
+        outline: 'display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding: 0 20px; border: 1px solid #0077B3; border-radius: 4px; background: ' + (on ? '#0077B3' : '#FFFFFF') + '; color: ' + (on ? '#FFFFFF' : '#0077B3') + '; font-size: 15px; font-weight: 600; cursor: pointer; ' + T,
+        outlineSm: 'display: inline-flex; align-items: center; justify-content: center; min-height: 40px; padding: 0 14px; border: 1px solid #0077B3; border-radius: 4px; background: ' + (on ? '#0077B3' : '#FFFFFF') + '; color: ' + (on ? '#FFFFFF' : '#0077B3') + '; font-size: 14px; font-weight: 600; cursor: pointer; text-align: center; ' + T,
+        edit: 'padding: 0; border: 0; background: none; font-size: 14px; font-weight: 600; color: ' + (on ? '#005F8F' : '#0077B3') + '; text-decoration: ' + (on ? 'underline' : 'none') + '; text-underline-offset: 3px; cursor: pointer',
+        backBtn: 'display: inline-flex; align-items: center; gap: 8px; min-height: 48px; padding: 0 18px; border: 1px solid ' + (on ? '#0077B3' : '#C3CACE') + '; border-radius: 4px; background: #FFFFFF; color: ' + (on ? '#0077B3' : '#2B3033') + '; font-size: 15px; font-weight: 600; cursor: pointer; ' + T
+      };
+    };
+    const HV = {};
+    ['emp', 'rest', 'cp', 'lg', 'lgo', 'e1', 'e2', 'e3', 'bk', 'nx', 'rs'].forEach((k) => { HV[k] = hv(k); });
+    /* Radio dlaždice (země, doprava, platba) */
+    const ICO = {"cz": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2030%2020%22%3E%3Crect%20width%3D%2230%22%20height%3D%2210%22%20fill%3D%22%23FFFFFF%22/%3E%3Crect%20y%3D%2210%22%20width%3D%2230%22%20height%3D%2210%22%20fill%3D%22%23D7141A%22/%3E%3Cpath%20d%3D%22M0%200%2015%2010%200%2020Z%22%20fill%3D%22%2311457E%22/%3E%3Crect%20x%3D%22.5%22%20y%3D%22.5%22%20width%3D%2229%22%20height%3D%2219%22%20fill%3D%22none%22%20stroke%3D%22%23D0D6D9%22/%3E%3C/svg%3E", "sk": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2030%2020%22%3E%3Crect%20width%3D%2230%22%20height%3D%226.67%22%20fill%3D%22%23FFFFFF%22/%3E%3Crect%20y%3D%226.67%22%20width%3D%2230%22%20height%3D%226.66%22%20fill%3D%22%230B4EA2%22/%3E%3Crect%20y%3D%2213.33%22%20width%3D%2230%22%20height%3D%226.67%22%20fill%3D%22%23EE1C25%22/%3E%3Cpath%20d%3D%22M6%204.5h8v6.5c0%203-2%204.5-4%205.5-2-1-4-2.5-4-5.5Z%22%20fill%3D%22%23EE1C25%22%20stroke%3D%22%23FFFFFF%22%20stroke-width%3D%221%22/%3E%3Cpath%20d%3D%22M10%206.5v7M8%208.5h4M8.5%2010.5h3%22%20stroke%3D%22%23FFFFFF%22%20stroke-width%3D%221%22/%3E%3Crect%20x%3D%22.5%22%20y%3D%22.5%22%20width%3D%2229%22%20height%3D%2219%22%20fill%3D%22none%22%20stroke%3D%22%23D0D6D9%22/%3E%3C/svg%3E", "osobni": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%235A666C%22%20stroke-width%3D%221.5%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M3%2021l18%200%22%20/%3E%20%3Cpath%20d%3D%22M3%207v1a3%203%200%200%200%206%200v-1m0%201a3%203%200%200%200%206%200v-1m0%201a3%203%200%200%200%206%200v-1h-18l2%20-4h14l2%204%22%20/%3E%20%3Cpath%20d%3D%22M5%2021l0%20-10.15%22%20/%3E%20%3Cpath%20d%3D%22M19%2021l0%20-10.15%22%20/%3E%20%3Cpath%20d%3D%22M9%2021v-4a2%202%200%200%201%202%20-2h2a2%202%200%200%201%202%202v4%22%20/%3E%3C/svg%3E", "dop": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%235A666C%22%20stroke-width%3D%221.5%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M7%2017m-2%200a2%202%200%201%200%204%200a2%202%200%201%200%20-4%200%22%20/%3E%20%3Cpath%20d%3D%22M17%2017m-2%200a2%202%200%201%200%204%200a2%202%200%201%200%20-4%200%22%20/%3E%20%3Cpath%20d%3D%22M5%2017h-2v-4m-1%20-8h11v12m-4%200h6m4%200h2v-6h-8m0%20-5h5l3%205%22%20/%3E%20%3Cpath%20d%3D%22M3%209l4%200%22%20/%3E%3C/svg%3E", "dobirka": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%235A666C%22%20stroke-width%3D%221.5%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M12%203l8%204.5l0%209l-8%204.5l-8%20-4.5l0%20-9l8%20-4.5%22%20/%3E%20%3Cpath%20d%3D%22M12%2012l8%20-4.5%22%20/%3E%20%3Cpath%20d%3D%22M12%2012l0%209%22%20/%3E%20%3Cpath%20d%3D%22M12%2012l-8%20-4.5%22%20/%3E%20%3Cpath%20d%3D%22M16%205.25l-8%204.5%22%20/%3E%3C/svg%3E", "hotove": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%235A666C%22%20stroke-width%3D%221.5%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M7%209m0%202a2%202%200%200%201%202%20-2h10a2%202%200%200%201%202%202v6a2%202%200%200%201%20-2%202h-10a2%202%200%200%201%20-2%20-2z%22%20/%3E%20%3Cpath%20d%3D%22M14%2014m-2%200a2%202%200%201%200%204%200a2%202%200%201%200%20-4%200%22%20/%3E%20%3Cpath%20d%3D%22M17%209v-2a2%202%200%200%200%20-2%20-2h-10a2%202%200%200%200%20-2%202v6a2%202%200%200%200%202%202h2%22%20/%3E%3C/svg%3E", "gp": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%235A666C%22%20stroke-width%3D%221.5%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M3%205m0%203a3%203%200%200%201%203%20-3h12a3%203%200%200%201%203%203v8a3%203%200%200%201%20-3%203h-12a3%203%200%200%201%20-3%20-3z%22%20/%3E%20%3Cpath%20d%3D%22M3%2010l18%200%22%20/%3E%20%3Cpath%20d%3D%22M7%2015l.01%200%22%20/%3E%20%3Cpath%20d%3D%22M11%2015l2%200%22%20/%3E%3C/svg%3E"};
+    const radio = (k, on, ic) => {
+      const x = hv(k);
+      return {
+        aria: on ? 'true' : 'false', enter: x.enter, leave: x.leave, icon: ICO[ic] || '',
+        ink: on || x.on ? '#0077B3' : '#2B3033',
+        row: 'display: flex; align-items: center; gap: 12px; width: 100%; min-height: 52px; padding: 6px 0; box-sizing: border-box; border: 0; background: none; color: #2B3033; font-size: 15px; font-weight: 600; text-align: left; cursor: pointer',
+        icoStyle: ic === 'cz' || ic === 'sk' ? 'display: block; width: 27px; height: 18px; flex-shrink: 0; border-radius: 2px' : 'display: block; width: 26px; height: 26px; flex-shrink: 0',
+        dot: 'display: inline-flex; align-items: center; justify-content: center; width: 20px; height: 20px; flex-shrink: 0; box-sizing: border-box; border: 2px solid ' + (on || x.on ? '#0077B3' : '#87929A') + '; border-radius: 50%; background: #FFFFFF; transition: border-color 0.15s',
+        inner: 'width: 10px; height: 10px; border-radius: 50%; background: ' + (on ? '#0077B3' : 'transparent')
+      };
+    };
+    /* Checkbox řádky */
+    const check = (k, on, toggle) => {
+      const x = hv(k);
+      return {
+        aria: on ? 'true' : 'false', toggle: toggle, enter: x.enter, leave: x.leave,
+        row: 'display: flex; align-items: flex-start; gap: 10px; width: 100%; min-height: 40px; padding: 8px 0; border: 0; background: none; color: ' + (x.on ? '#0077B3' : '#2B3033') + '; font-size: 14px; line-height: 1.45; text-align: left; cursor: pointer; transition: color 0.15s',
+        box: 'display: inline-flex; align-items: center; justify-content: center; width: 20px; height: 20px; flex-shrink: 0; margin-top: 1px; box-sizing: border-box; border: 1.5px solid ' + (on ? '#0077B3' : x.on ? '#0077B3' : '#87929A') + '; border-radius: 3px; background: ' + (on ? '#0077B3' : '#FFFFFF') + '; transition: background-color 0.15s, border-color 0.15s'
+      };
+    };
+    const tog = (key) => () => this.setState({ [key]: !s[key] });
+    /* Dlaždice Přihlášení a registrace (stejný styl pro obě) */
+    const acard = (m) => {
+      const x = hv('m' + m), on = (s.mode || 'new') === m;
+      return {
+        aria: on ? 'true' : 'false', pick: () => this.setState({ mode: m }), enter: x.enter, leave: x.leave,
+        card: 'display: flex; flex-direction: column; padding: 14px 16px; box-sizing: border-box; border: 1px solid ' + (on ? '#0077B3' : x.on ? '#87929A' : '#D0D6D9') + '; border-radius: 6px; background: ' + (on ? '#F2F8FB' : '#FFFFFF') + '; box-shadow: ' + (on ? 'inset 0 0 0 1px #0077B3' : 'none') + '; ' + T,
+        ico: 'display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; flex-shrink: 0; border-radius: 4px; background: ' + (on ? '#0077B3' : '#F2F4F5') + '; color: ' + (on ? '#FFFFFF' : '#5A666C') + '; ' + T,
+        dot: 'display: inline-flex; align-items: center; justify-content: center; width: 20px; height: 20px; flex-shrink: 0; box-sizing: border-box; border: 2px solid ' + (on ? '#0077B3' : '#87929A') + '; border-radius: 50%; background: #FFFFFF',
+        inner: 'width: 10px; height: 10px; border-radius: 50%; background: ' + (on ? '#0077B3' : 'transparent')
+      };
+    };
+    /* Kroky nahoře */
+    const stp = (n) => {
+      const x = hv('st' + n), cur = step === n, past = step > n;
+      return {
+        cur: cur ? 'step' : 'false', go: () => { if (past) this.setState({ step: n, done: false }); }, enter: x.enter, leave: x.leave,
+        mark: past ? '✓' : String(n),
+        btn: 'position: relative; display: flex; flex-direction: column; align-items: center; padding: 32px 0 0; border: 0; background: none; font: inherit; cursor: ' + (past ? 'pointer' : 'default'),
+        lab: 'position: absolute; top: 0; left: 50%; transform: translateX(-50%); white-space: nowrap; font-size: ' + (mid ? 16 : 13) + 'px; font-weight: 700; line-height: 1.25; text-align: center; color: ' + (cur ? '#2B3033' : past ? (x.on ? '#0077B3' : '#2B3033') : '#87929A') + '; text-decoration: ' + (past && x.on ? 'underline' : 'none') + '; text-underline-offset: 3px',
+        num: 'display: flex; align-items: center; justify-content: center; width: 38px; height: 38px; box-sizing: border-box; border-radius: 4px; font-size: 15px; font-weight: 700; ' + (cur ? 'background: #2E4047; color: #FFFFFF;' : past ? 'background: ' + (x.on ? '#005C14' : '#007A1A') + '; color: #FFFFFF;' : 'border: 3px solid #C3CACE; background: #FFFFFF; color: #87929A;') + ' ' + T
+      };
+    };
+    const SHIPS = [['osobni', 'Osobní odběr', 'Prodejna Dražice, Po–Pá 8:30–16:00', 0], ['dop', 'Dopravné', 'Doručení přepravní společností', shipCost]];
+    const PAYS = [['dobirka', 'Dobírka'], ['hotove', 'Hotově na prodejně'], ['gp', 'GPwebpay']].filter((p) => p[0] !== 'hotove' || ship !== 'dop');
+    const shipName = ship === 'osobni' ? 'Osobní odběr' : 'Dopravné';
+    const payName = (PAYS.find((p) => p[0] === pay) || ['', 'Dobírka'])[1];
+    const goStep = (n) => { this.setState({ step: n, err1: false, err3: false }); };
+    const next = () => {
+      if (step === 1) { if (!ship || !pay) { this.setState({ err1: true }); return; } goStep(2); }
+      else if (step === 2) goStep(3);
+      else { if (!s.terms) { this.setState({ err3: true }); return; } this.setState({ done: true }); }
+    };
+    const back = () => { if (step === 1) { try { window.history.back(); } catch (e) {} return; } goStep(step - 1); };
+    const lbl = 'display: flex; flex-direction: column; gap: 6px; min-width: 0; font-size: 14px; font-weight: 600';
+    const inp = 'height: 48px; padding: 0 14px; box-sizing: border-box; width: 100%; border: 1px solid #87929A; border-radius: 4px; background: #FFFFFF; font-size: 15px; font-weight: 400; color: #2B3033';
+    return {
+      gut: gut, hv: HV, desk: desk, mob: !desk,
+      h1: desk ? 30 : 24,
+      count: count,
+      st1: stp(1), st2: stp(2), st3: stp(3),
+      stepPad: mid ? 64 : 44,
+      line1: step > 1 ? '#007A1A' : '#C3CACE', line2: step > 2 ? '#007A1A' : '#C3CACE',
+      done: !!s.done, s1: step === 1 && !s.done, s2: step === 2 && !s.done, s3: step === 3 && !s.done,
+      restart: () => this.setState({ done: false, step: 1, terms: false }),
+      empty: items.length === 0, full: items.length > 0,
+      restore: () => this.setState({ items: START }),
+      rowCols: desk ? 'minmax(0, 3fr) 120px 170px 150px 150px 40px' : 'minmax(0, 1fr) auto',
+      nameSpan: desk ? 'auto' : '1 / -1',
+      numAlign: desk ? 'right' : 'left',
+      thumb: mid ? 72 : 56,
+      items: items.map((x) => {
+        const qm = hv(x.id + 'qm'), minOff = x.qty <= 1;
+        return {
+          img: x.img, name: x.name, code: x.code, qty: x.qty, unit: x.unit,
+          row: hv(x.id + 'row'), nm: hv(x.id + 'nm'), im: hv(x.id + 'im'), qm: qm, qp: hv(x.id + 'qp'), rm: hv(x.id + 'rm'),
+          minOff: minOff, minInk: minOff ? '#B5BDC2' : qm.ink, minCur: minOff ? 'default' : 'pointer',
+          unitPrice: kc(x.price), total: kc(x.price * x.qty), priceColor: x.old ? '#B40808' : '#2B3033',
+          minus: () => upd(x.id, (y) => Object.assign({}, y, { qty: Math.max(1, y.qty - 1) })),
+          plus: () => upd(x.id, (y) => Object.assign({}, y, { qty: Math.min(20, y.qty + 1) })),
+          remove: () => this.setState({ items: items.filter((y) => y.id !== x.id) })
+        };
+      }),
+      /* Dárek */
+      giftCols: desk ? 'repeat(4, minmax(0, 1fr))' : sm ? 'repeat(2, minmax(0, 1fr))' : 'minmax(0, 1fr)',
+      giftNote: giftOk ? (gift != null ? 'Dárek vybrán ✓' : 'Můžete si vybrat jeden dárek') : 'Dostupné od 5 000 Kč · chybí vám ještě ' + kc(GIFT - goods),
+      giftNoteColor: giftOk ? '#007A1A' : '#5A666C',
+      gifts: GIFTS.map((g, i) => {
+        const x = hv('gift' + i), on = gift === i;
+        return {
+          name: g, img: '/_blob/dc5956f6e2d602109a847edfb0e95810', z: giftOk && x.on ? 1.06 : 1, pressed: on ? 'true' : 'false', off: !giftOk, enter: x.enter, leave: x.leave,
+          pick: () => { if (giftOk) this.setState({ gift: on ? null : i }); },
+          cta: !giftOk ? 'Dostupné od 5 000 Kč' : on ? 'Vybráno' : 'Vybrat dárek zdarma',
+          sub: on ? 'Vybráno ✓' : giftOk ? 'Vybrat dárek zdarma' : 'Dárek zdarma',
+          subInk: on || giftOk ? '#007A1A' : '#5A666C',
+          icoBg: on ? '#007A1A' : giftOk && x.on ? '#E8F5EB' : '#F2F4F5', icoInk: on ? '#FFFFFF' : giftOk ? '#007A1A' : '#87929A',
+          card: 'display: flex; align-items: center; gap: 12px; width: 100%; height: 88px; padding: 0 8px; box-sizing: border-box; border: 1px solid ' + (on ? '#007A1A' : giftOk && x.on ? '#007A1A' : 'transparent') + '; border-radius: 4px; background: #FFFFFF; box-shadow: ' + (on ? 'inset 0 0 0 1px #007A1A' : 'none') + '; color: #2B3033; opacity: ' + (giftOk ? 1 : 0.75) + '; cursor: ' + (giftOk ? 'pointer' : 'not-allowed') + '; ' + T
+        };
+      }),
+      hasGift: gift != null, giftName: gift != null ? GIFTS[gift] : '',
+      /* Kupón + doprava zdarma */
+      coupon: s.coupon || '', onCoupon: (e) => this.setState({ coupon: e.target.value, cpErr: false }),
+      applyCoupon: () => this.setState({ cpErr: !!(s.coupon || '').trim() }),
+      couponMsg: !!s.cpErr,
+      freeLead: goods >= FREE ? 'Máte ' : 'Pokud nakoupíte ještě za ',
+      freeStrong: goods >= FREE ? 'dopravné zdarma' : kc(FREE - goods),
+      freeTail: goods >= FREE ? '' : ', budete mít ',
+      freeMissing: goods < FREE,
+      freeGoods: kc(Math.min(goods, FREE)).replace(' Kč', ''),
+      freePct: Math.min(100, Math.round(goods / FREE * 100)),
+      freeFill: goods >= FREE ? '#007A1A' : '#0077B3',
+      freeBg: goods >= FREE ? '#E8F5EB' : '#F2F8FB', freeInk: goods >= FREE ? '#1E5B2B' : '#2B3033',
+      /* Země, doprava, platba */
+      optCols: desk ? 'repeat(3, minmax(0, 1fr))' : 'minmax(0, 1fr)',
+      countries: [['cz', 'Česko'], ['sk', 'Slovensko']].map((c) => Object.assign({ label: c[1], pick: () => this.setState({ country: c[0] }) }, radio('c' + c[0], country === c[0], c[0]))),
+      ships: SHIPS.map((o) => Object.assign({ label: o[1], sub: o[2], hasSub: true, price: o[0] === 'dop' && !ship ? 'od 110 Kč' : kc(o[3]), priceInk: o[3] === 0 && (o[0] !== 'dop' || ship) ? '#007A1A' : '#2B3033',
+        pick: () => this.setState({ ship: o[0], err1: false, pay: (o[0] === 'dop' && s.pay === 'hotove') ? null : s.pay }) }, radio('s' + o[0], ship === o[0], o[0]))),
+      pays: PAYS.map((o) => Object.assign({ label: o[1], price: '0 Kč', priceInk: '#007A1A', pick: () => this.setState({ pay: o[0], err1: false }) }, radio('p' + o[0], pay === o[0], o[0]))),
+      payHint: ship === 'dop',
+      err1: !!s.err1,
+      /* Krok 2 */
+      twoCols: desk ? 'minmax(0, 1fr) 380px' : 'minmax(0, 1fr)', colGap: vw >= 1362 ? 56 : 32,
+      asidePos: desk ? 'sticky' : 'static',
+      accCols: sm ? 'repeat(2, minmax(0, 1fr))' : 'minmax(0, 1fr)',
+      fCols: sm ? 'repeat(2, minmax(0, 1fr))' : 'minmax(0, 1fr)',
+      lbl: lbl, inp: inp,
+      acc: check('acc', s.acc !== false, () => this.setState({ acc: s.acc === false })),
+      isNew: (s.mode || 'new') === 'new', loginOpen: s.mode === 'login',
+      mNew: acard('new'), mLog: acard('login'),
+      co: check('co', !!s.company, tog('company')), company: !!s.company,
+      vat: check('vat', !!s.vat, tog('vat')),
+      da: check('da', !!s.diff, tog('diff')), diffAddr: !!s.diff,
+      hk: check('hk', !!s.heur, tog('heur')),
+      nw: check('nw', !!s.news, tog('news')),
+      shipName: shipName, shipPrice: kc(shipCost), payName: payName, grand: kc(grand),
+      countryName: country === 'sk' ? 'Slovensko' : 'Česko',
+      /* Krok 3 */
+      reviewCols: desk ? 'repeat(3, minmax(0, 1fr))' : mid ? 'repeat(2, minmax(0, 1fr))' : 'minmax(0, 1fr)',
+      revRow: sm ? 'minmax(0, 1fr) auto 120px' : 'minmax(0, 1fr) auto',
+      toStep1: () => goStep(1), toStep2: () => goStep(2),
+      tc: check('tc', !!s.terms, () => this.setState({ terms: !s.terms, err3: false })),
+      err3: !!s.err3,
+      /* Ukotvená lišta */
+      bar: items.length > 0 && !s.done,
+      back: back,
+      next: next,
+      nextFlex: sm ? '0 0 auto' : '1 1 100%',
+      barJustify: desk ? 'center' : 'flex-start',
+      nextLabel: step === 3 ? 'Odeslat objednávku' : 'Pokračovat',
+      nextSub: step === 1 ? 'ke kontaktním údajům' : step === 2 ? 'ke kontrole údajů' : 's povinností platby'
+    };
+  }
+}
+</script>
+</body>
+</html>

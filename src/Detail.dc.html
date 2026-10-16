@@ -1,0 +1,337 @@
+<!doctype html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<title>SKOL – detail produktu</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#0077B3}a:hover{color:#005F8F}
+</style>
+</helmet>
+<div style="width: 100%; background: #FFFFFF; font-family: 'Open Sans', 'Segoe UI', Arial, sans-serif; color: #2B3033; font-size: 15px; line-height: 1.55">
+  <dc-import name="Header" active="Běžecké lyžování" cart-count="{{cartCount}}" hint-size="100%,170px"></dc-import>
+
+  <main style="max-width: 1745px; margin: 0 auto; padding: 0 {{gut}}px; box-sizing: border-box">
+    <!-- Breadcrumbs -->
+    <nav aria-label="Drobečková navigace" style="padding: 14px 0; font-size: 13px; color: #5A666C">
+      <a href="HP.dc.html" onMouseEnter="{{hv.c0.enter}}" onMouseLeave="{{hv.c0.leave}}" style="text-decoration: {{hv.c0.ul}}; text-underline-offset: 3px">Úvod</a> <span aria-hidden="true">›</span> <a href="Kategorie.dc.html" onMouseEnter="{{hv.c1.enter}}" onMouseLeave="{{hv.c1.leave}}" style="text-decoration: {{hv.c1.ul}}; text-underline-offset: 3px">Běžecké lyžování</a> <span aria-hidden="true">›</span> <a href="Kategorie.dc.html" onMouseEnter="{{hv.c2.enter}}" onMouseLeave="{{hv.c2.leave}}" style="text-decoration: {{hv.c2.ul}}; text-underline-offset: 3px">Boty na běžky</a> <span aria-hidden="true">›</span> <a href="Kategorie.dc.html" onMouseEnter="{{hv.c3.enter}}" onMouseLeave="{{hv.c3.leave}}" style="text-decoration: {{hv.c3.ul}}; text-underline-offset: 3px">Boty SPINE</a> <span aria-hidden="true">›</span> <a href="Kategorie.dc.html" onMouseEnter="{{hv.c4.enter}}" onMouseLeave="{{hv.c4.leave}}" style="text-decoration: {{hv.c4.ul}}; text-underline-offset: 3px">pro vázání NNN (RS)</a> <span aria-hidden="true">›</span> <span aria-current="page">SPINE RS ENERGY 258</span>
+    </nav>
+
+    <!-- ProductDetail: galerie + nákupní box -->
+    <div style="display: grid; grid-template-columns: {{pdpCols}}; gap: {{pdpGap}}px; align-items: start; padding-top: 8px">
+      <!-- Gallery -->
+      <div style="min-width: 0">
+        <div style="position: relative; aspect-ratio: 1 / 1; box-sizing: border-box; border: 1px solid #E1E5E7; border-radius: 4px; background: #FFFFFF; overflow: hidden">
+          <img src="/_blob/b0be7b43ecd1a13649ccac122713bf8d" alt="SPINE RS ENERGY 258 – fotografie {{imgNo}}" style="display: block; width: 100%; height: 100%; object-fit: contain">
+          <button type="button" aria-label="Předchozí fotografie" onClick="{{prevImg}}" onMouseEnter="{{hv.prev.enter}}" onMouseLeave="{{hv.prev.leave}}" style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; border: 0; border-radius: 4px; background: {{hv.prev.btn}}; box-shadow: 0 2px 8px rgba(20, 30, 35, 0.16); color: {{hv.prev.btnInk}}; cursor: pointer; transition: background-color 0.15s, color 0.15s"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6l6 6"></path></svg></button>
+          <button type="button" aria-label="Další fotografie" onClick="{{nextImg}}" onMouseEnter="{{hv.next.enter}}" onMouseLeave="{{hv.next.leave}}" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; border: 0; border-radius: 4px; background: {{hv.next.btn}}; box-shadow: 0 2px 8px rgba(20, 30, 35, 0.16); color: {{hv.next.btnInk}}; cursor: pointer; transition: background-color 0.15s, color 0.15s"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6l-6 6"></path></svg></button>
+          <span style="position: absolute; right: 12px; bottom: 12px; padding: 2px 10px; border-radius: 4px; background: rgba(43, 48, 51, 0.75); color: #FFFFFF; font-size: 13px; font-weight: 600">{{imgNo}} / 6</span>
+        </div>
+        <ul style="display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: {{thumbGap}}px; margin: 12px 0 0; padding: 0; list-style: none">
+          <sc-for list="{{thumbs}}" as="t" hint-placeholder-count="6">
+            <li><button type="button" aria-label="{{t.label}}" aria-current="{{t.current}}" onClick="{{t.pick}}" onMouseEnter="{{t.enter}}" onMouseLeave="{{t.leave}}" style="{{t.style}}"><img src="/_blob/b0be7b43ecd1a13649ccac122713bf8d" alt="" style="display: block; width: 100%; height: 100%; object-fit: contain"></button></li>
+          </sc-for>
+        </ul>
+      </div>
+
+      <!-- BuyBox -->
+      <div style="display: flex; flex-direction: column; gap: 18px; min-width: 0">
+        <div style="display: flex; flex-direction: column; gap: 10px">
+          <div style="display: flex; gap: 8px">
+            <span style="display: inline-flex; align-items: center; height: 24px; padding: 0 8px; border-radius: 3px; background: #FA8231; color: #2B3033; font-size: 12px; font-weight: 700">Akce</span>
+            <span style="display: inline-flex; align-items: center; height: 24px; padding: 0 8px; border-radius: 3px; background: #F7B731; color: #2B3033; font-size: 12px; font-weight: 700">−12 %</span>
+          </div>
+          <h1 style="margin: 0; font-size: {{h1}}px; font-weight: 800; line-height: 1.2">SPINE RS ENERGY 258</h1>
+          
+          <p style="margin: 0; color: #3E4A50">Kombi boty na běžky SPINE RS ENERGY – sportovní KOMBI boty pro vázání NNN. Vhodné jak na klasiku tak i na bruslení.</p>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 2px; font-variant-numeric: tabular-nums">
+          <span style="font-size: 14px; color: #66737A">Běžná cena s DPH <s style="font-weight: 700">2 600 Kč</s></span>
+          <span style="font-size: 30px; font-weight: 800; line-height: 1.2; color: #B40808">2 290 Kč</span>
+          <span style="font-size: 13px; color: #5A666C">1 893 Kč bez DPH</span>
+        </div>
+
+        <!-- VariantPicker -->
+        <fieldset style="margin: 0; padding: 0; border: 0">
+          <legend style="padding: 0 0 10px; font-size: 14px">Velikost EU: <b>{{variantName}}</b></legend>
+          <div role="radiogroup" aria-label="Velikost EU" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(60px, 1fr)); gap: 8px">
+            <sc-for list="{{variants}}" as="v" hint-placeholder-count="11">
+              <button type="button" role="radio" aria-checked="{{v.checked}}" onClick="{{v.pick}}" onMouseEnter="{{v.enter}}" onMouseLeave="{{v.leave}}" style="{{v.style}}">{{v.label}}<small style="font-size: 11px; font-weight: 600; color: #007A1A">Skladem</small></button>
+            </sc-for>
+          </div>
+          <sc-if value="{{showErr}}" hint-placeholder-val="{{false}}">
+            <p role="alert" style="margin: 8px 0 0; font-size: 14px; font-weight: 600; color: #B40808">Vyberte prosím velikost.</p>
+          </sc-if>
+        </fieldset>
+
+        <details style="border: 1px solid #E1E5E7; border-radius: 4px">
+          <summary onMouseEnter="{{hv.guide.enter}}" onMouseLeave="{{hv.guide.leave}}" style="display: flex; align-items: center; gap: 10px; min-height: 44px; padding: 0 14px; background: {{hv.guide.soft}}; font-weight: 600; color: #0077B3; text-decoration: {{hv.guide.ul}}; text-underline-offset: 3px; cursor: pointer; transition: background-color 0.15s"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19.875 12c.621 0 1.125 .512 1.125 1.143v5.714c0 .631 -.504 1.143 -1.125 1.143h-15.875a1 1 0 0 1 -1 -1v-5.857c0 -.631 .504 -1.143 1.125 -1.143h15.75z"></path><path d="M9 12v2"></path><path d="M6 12v3"></path><path d="M12 12v3"></path><path d="M18 12v3"></path><path d="M15 12v2"></path><path d="M3 3v4"></path><path d="M3 5h18"></path><path d="M21 3v4"></path></svg>Tabulka velikostí</summary>
+          <div style="padding: 0 14px 14px; font-size: 14px">
+            <table style="width: 100%; border-collapse: collapse"><thead><tr><th scope="col" style="padding: 6px 0; border-bottom: 1px solid #E1E5E7; text-align: left">EU</th><th scope="col" style="padding: 6px 0; border-bottom: 1px solid #E1E5E7; text-align: left">Délka chodidla</th></tr></thead>
+            <tbody><tr><td style="padding: 6px 0">37</td><td>[cm]</td></tr><tr><td style="padding: 6px 0">39</td><td>[cm]</td></tr><tr><td style="padding: 6px 0">41</td><td>[cm]</td></tr><tr><td style="padding: 6px 0">43</td><td>[cm]</td></tr><tr><td style="padding: 6px 0">45</td><td>[cm]</td></tr><tr><td style="padding: 6px 0">47</td><td>[cm]</td></tr></tbody></table>
+            <p style="margin: 8px 0 0; color: #5A666C">Změřte délku chodidla ve stoje. Tabulka velikostí SPINE je v Poradně.</p>
+          </div>
+        </details>
+
+        <div style="display: flex; flex-wrap: wrap; gap: 12px">
+          <div style="display: inline-flex; align-items: center; height: 52px; box-sizing: border-box; border: 1px solid #D0D6D9; border-radius: 4px">
+            <button type="button" aria-label="Ubrat kus" onClick="{{qtyMinus}}" onMouseEnter="{{hv.qm.enter}}" onMouseLeave="{{hv.qm.leave}}" style="width: 44px; height: 100%; border: 0; border-radius: 4px 0 0 4px; background: {{hv.qm.soft}}; font: inherit; font-size: 20px; color: {{hv.qm.ink}}; cursor: pointer; transition: background-color 0.15s, color 0.15s">−</button>
+            <span aria-live="polite" style="min-width: 32px; text-align: center; font-weight: 700">{{qty}}</span>
+            <button type="button" aria-label="Přidat kus" onClick="{{qtyPlus}}" onMouseEnter="{{hv.qp.enter}}" onMouseLeave="{{hv.qp.leave}}" style="width: 44px; height: 100%; border: 0; border-radius: 0 4px 4px 0; background: {{hv.qp.soft}}; font: inherit; font-size: 20px; color: {{hv.qp.ink}}; cursor: pointer; transition: background-color 0.15s, color 0.15s">+</button>
+          </div>
+          <button type="button" onClick="{{buy}}" onMouseEnter="{{hv.buy.enter}}" onMouseLeave="{{hv.buy.leave}}" style="display: inline-flex; flex: 1; align-items: center; justify-content: center; gap: 10px; min-width: 200px; height: 52px; border: 0; border-radius: 4px; background: {{hv.buy.buy}}; box-shadow: {{hv.buy.buyLift}}; color: #FFFFFF; font: inherit; font-size: 17px; font-weight: 700; cursor: pointer; transition: background-color 0.15s, box-shadow 0.15s"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6.331 8h11.339a2 2 0 0 1 1.977 2.304l-1.255 8.152a3 3 0 0 1 -2.966 2.544h-6.852a3 3 0 0 1 -2.965 -2.544l-1.255 -8.152a2 2 0 0 1 1.977 -2.304z"></path><path d="M9 11v-5a3 3 0 0 1 6 0v5"></path></svg>Do košíku</button>
+        </div>
+        <!-- BasketResultDialog: potvrzení přidání do košíku (obsah jako na skol.net) -->
+        <sc-if value="{{added}}" hint-placeholder-val="{{false}}">
+          <div style="position: fixed; inset: 0; z-index: 100; display: flex; align-items: center; justify-content: center; padding: 16px; box-sizing: border-box; overflow-y: auto">
+            <button type="button" tabindex="-1" aria-hidden="true" onClick="{{closeAdded}}" style="position: absolute; inset: 0; width: 100%; height: 100%; padding: 0; border: 0; background: rgba(20, 30, 35, 0.55); cursor: default"></button>
+            <div role="dialog" aria-modal="true" aria-labelledby="added-title" style="position: relative; width: 100%; max-width: 640px; box-sizing: border-box; padding: {{dlgPad}}px; border-radius: 6px; background: #FFFFFF; box-shadow: 0 24px 48px rgba(20, 30, 35, 0.24)">
+              <button type="button" aria-label="Zavřít" onClick="{{closeAdded}}" onMouseEnter="{{hv.dx.enter}}" onMouseLeave="{{hv.dx.leave}}" style="position: absolute; top: 12px; right: 12px; display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; padding: 0; border: 0; border-radius: 4px; background: {{hv.dx.soft}}; color: {{hv.dx.ink}}; cursor: pointer; transition: background-color 0.15s, color 0.15s"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6l-12 12"></path><path d="M6 6l12 12"></path></svg></button>
+              <h2 id="added-title" style="display: flex; align-items: center; gap: 10px; margin: 0 48px 18px 0; font-size: 22px; font-weight: 800; line-height: 1.25"><span style="display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px; flex-shrink: 0; border-radius: 4px; background: #E8F5EB; color: #007A1A"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5l10 -10"></path></svg></span>{{addedTitle}}</h2>
+              <div style="display: grid; grid-template-columns: {{dlgCols}}; gap: 12px 16px; align-items: center; padding: 14px; border-radius: 4px; background: #F6F7F7">
+                <a href="Detail.dc.html" style="display: block; width: 80px; height: 80px; overflow: hidden; border-radius: 4px; background: #FFFFFF"><img src="/_blob/b0be7b43ecd1a13649ccac122713bf8d" alt="SPINE RS ENERGY 258" style="display: block; width: 100%; height: 100%; object-fit: contain"></a>
+                <span style="display: flex; flex-direction: column; gap: 2px; min-width: 0; line-height: 1.4"><b style="font-size: 15px">SPINE RS ENERGY 258</b><span style="font-size: 13px; color: #5A666C">Velikost EU: {{variantName}}</span><span style="display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: #5A666C">Dostupnost: <b style="display: inline-flex; align-items: center; gap: 6px; color: #007A1A"><span style="width: 8px; height: 8px; border-radius: 50%; background: currentColor"></span>Skladem</b></span></span>
+                <span style="display: flex; flex-direction: column; align-items: {{dlgPriceAlign}}; font-variant-numeric: tabular-nums; line-height: 1.3"><b style="font-size: 18px; color: #B40808">2 290 Kč</b><span style="font-size: 13px; color: #5A666C">1 893 Kč bez DPH</span></span>
+              </div>
+              <div style="display: flex; flex-direction: column; gap: 4px; margin-top: 16px; font-size: 14px">
+                <div style="display: flex; justify-content: space-between; gap: 12px; font-size: 16px"><span>Celková cena přidaného zboží</span><b style="font-variant-numeric: tabular-nums">{{addedTotal}}</b></div>
+                <span style="color: #5A666C">{{cartLine}}</span>
+              </div>
+              <div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; margin-top: 22px">
+                <button type="button" onClick="{{closeAdded}}" onMouseEnter="{{hv.dback.enter}}" onMouseLeave="{{hv.dback.leave}}" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; flex: 1 1 200px; min-height: 52px; padding: 0 20px; border: 1px solid #0077B3; border-radius: 4px; background: {{hv.dback.obg}}; color: {{hv.dback.ofg}}; font-size: 16px; font-weight: 600; cursor: pointer; transition: background-color 0.15s, color 0.15s">Zpět do obchodu</button>
+                <a href="Kosik.dc.html" onMouseEnter="{{hv.dgo.enter}}" onMouseLeave="{{hv.dgo.leave}}" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; flex: 1 1 200px; min-height: 52px; padding: 0 20px; border-radius: 4px; background: {{hv.dgo.buy}}; box-shadow: {{hv.dgo.buyLift}}; color: #FFFFFF; font-size: 16px; font-weight: 700; text-decoration: none; transition: background-color 0.15s, box-shadow 0.15s">Objednat zboží<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="transform: translateX({{hv.dgo.x}}); transition: transform 0.15s"><path d="M5 12l14 0"></path><path d="M13 18l6 -6"></path><path d="M13 6l6 6"></path></svg></a>
+              </div>
+            </div>
+          </div>
+        </sc-if>
+
+        <!-- Availability: dostupnost dle skol.net – najetím (nebo klávesnicí) na „Skladem“ se otevře popup s počtem kusů a termíny -->
+        <div style="display: flex; flex-direction: column; gap: 10px; padding: 14px 16px; border-radius: 4px; background: #F6F7F7">
+          <div onMouseEnter="{{avOpen}}" onMouseLeave="{{avClose}}" style="position: relative; align-self: flex-start">
+            <button type="button" aria-expanded="{{avExpanded}}" aria-controls="dostupnost-popup" onClick="{{avToggle}}" onFocus="{{avOpen}}" onBlur="{{avClose}}" style="display: inline-flex; align-items: center; gap: 8px; padding: 0; border: 0; background: none; font: inherit; font-size: 16px; font-weight: 700; color: #007A1A; cursor: help"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"></path><path d="M9 12l2 2l4 -4"></path></svg>Skladem<span style="font-size: 14px; font-weight: 400; color: #5A666C">· 328 párů</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="color: {{avIco}}; transition: color 0.15s"><path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0"></path><path d="M12 9h.01"></path><path d="M11 12h1v4h1"></path></svg></button>
+            <sc-if value="{{avShow}}" hint-placeholder-val="{{false}}">
+              <div id="dostupnost-popup" role="tooltip" style="position: absolute; left: 0; top: 100%; z-index: 30; padding-top: 8px">
+                <div style="width: {{avW}}px; box-sizing: border-box; padding: 18px; border: 1px solid #E1E5E7; border-radius: 6px; background: #FFFFFF; box-shadow: 0 16px 32px rgba(20, 30, 35, 0.16); font-size: 14px; color: #2B3033">
+                  <div style="display: flex; align-items: center; gap: 10px; padding-bottom: 12px; border-bottom: 1px solid #E1E5E7"><span style="display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px; flex-shrink: 0; border-radius: 4px; background: #E8F5EB; color: #007A1A"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"></path><path d="M9 12l2 2l4 -4"></path></svg></span><span style="display: flex; flex-direction: column; line-height: 1.3"><b style="font-size: 15px">Produkt je skladem</b><span style="font-size: 13px; color: #5A666C">v počtu 328 párů</span></span></div>
+                  
+                  <p style="margin: 0; padding: 10px 12px; border-radius: 4px; font-size: 13px; line-height: 1.45; color: #5a666c; background-color: #ffffff; padding-right: 0px; padding-left: 0px; padding-top: 10px; padding-bottom: 0px">Dostupnost aktualizujeme každou hodinu. Pro ověření 100% dostupnosti nás prosím kontaktujte.</p>
+                  <a href="Stranka.dc.html" onMouseEnter="{{hv.avMore.enter}}" onMouseLeave="{{hv.avMore.leave}}" style="display: inline-block; margin-top: 10px; font-size: 13px; font-weight: 600; color: #0077B3; text-decoration: {{hv.avMore.ulInv}}; text-underline-offset: 3px">Více o dopravě a dostupnosti</a>
+                </div>
+              </div>
+            </sc-if>
+          </div>
+          <div style="display: grid; grid-template-columns: {{avCols}}; gap: 8px 20px; font-size: 14px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px">
+            <span style="display: flex; align-items: center; gap: 10px; justify-content: flex-start"><span style="flex-shrink: 0; color: #5A666C; height: 20px"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 21l18 0"></path><path d="M3 7v1a3 3 0 0 0 6 0v-1m0 1a3 3 0 0 0 6 0v-1m0 1a3 3 0 0 0 6 0v-1h-18l2 -4h14l2 4"></path><path d="M5 21l0 -10.15"></path><path d="M19 21l0 -10.15"></path><path d="M9 21v-4a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v4"></path></svg></span><span style="display: flex; flex-direction: column; line-height: 1.35"><span style="color: #5A666C">Osobně v prodejně</span><b>úterý 20. října</b></span></span>
+            <span style="display: flex; align-items: center; gap: 10px"><span style="flex-shrink: 0; color: #5A666C; height: 20px"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"></path><path d="M17 17m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"></path><path d="M5 17h-2v-4m-1 -8h11v12m-4 0h6m4 0h2v-6h-8m0 -5h5l3 5"></path><path d="M3 9l4 0"></path></svg></span><span style="display: flex; flex-direction: column; line-height: 1.35"><span style="color: #5A666C">Přepravní společností</span><b>středa 21. října</b></span></span>
+          </div>
+        </div>
+
+        <!-- ProductMeta: kód, značka, záruka -->
+        <dl style="display: grid; grid-template-columns: {{metaCols}}; gap: 6px 20px; margin: 0; font-size: 14px">
+          <div style="display: flex; gap: 6px"><dt style="color: #5A666C">Kód:</dt><dd style="margin: 0; font-weight: 600">258</dd></div>
+          <div style="display: flex; gap: 6px"><dt style="color: #5A666C">Značka:</dt><dd style="margin: 0"><a href="Kategorie.dc.html" onMouseEnter="{{hv.brand.enter}}" onMouseLeave="{{hv.brand.leave}}" style="font-weight: 600; color: #0077B3; text-decoration: {{hv.brand.ulInv}}; text-underline-offset: 3px">SPINE</a></dd></div>
+          <div style="display: flex; gap: 6px"><dt style="color: #5A666C">Záruka:</dt><dd style="margin: 0; font-weight: 600">24 měsíců</dd></div>
+        </dl>
+
+        <!-- ProductActions: stejné funkce jako na skol.net -->
+        <ul style="display: grid; grid-template-columns: {{actCols}}; gap: 4px 16px; margin: 0; padding: 14px 0 0; border-top: 1px solid #E1E5E7; list-style: none">
+            <li><a href="Stranka.dc.html" onMouseEnter="{{hv.act0.enter}}" onMouseLeave="{{hv.act0.leave}}" style="display: flex; align-items: center; gap: 8px; min-height: 36px; font-size: 14px; color: {{hv.act0.ink}}; text-decoration: {{hv.act0.ul}}; text-underline-offset: 3px; transition: color 0.15s"><svg aria-hidden="true" style="flex-shrink: 0" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 5a2 2 0 1 1 4 0a7 7 0 0 1 4 6v3a4 4 0 0 0 2 3h-16a4 4 0 0 0 2 -3v-3a7 7 0 0 1 4 -6"></path><path d="M9 17v1a3 3 0 0 0 6 0v-1"></path></svg>Hlídací pes</a></li>
+            <li><a href="Stranka.dc.html" onMouseEnter="{{hv.act1.enter}}" onMouseLeave="{{hv.act1.leave}}" style="display: flex; align-items: center; gap: 8px; min-height: 36px; font-size: 14px; color: {{hv.act1.ink}}; text-decoration: {{hv.act1.ul}}; text-underline-offset: 3px; transition: color 0.15s"><svg aria-hidden="true" style="flex-shrink: 0" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 20l10 0"></path><path d="M6 6l6 -1l6 1"></path><path d="M12 3l0 17"></path><path d="M9 12l-3 -6l-3 6a3 3 0 0 0 6 0"></path><path d="M21 12l-3 -6l-3 6a3 3 0 0 0 6 0"></path></svg>Porovnat</a></li>
+            <li><a href="Stranka.dc.html" onMouseEnter="{{hv.act2.enter}}" onMouseLeave="{{hv.act2.leave}}" style="display: flex; align-items: center; gap: 8px; min-height: 36px; font-size: 14px; color: {{hv.act2.ink}}; text-decoration: {{hv.act2.ul}}; text-underline-offset: 3px; transition: color 0.15s"><svg aria-hidden="true" style="flex-shrink: 0" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19.5 12.572l-7.5 7.428l-7.5 -7.428a5 5 0 1 1 7.5 -6.566a5 5 0 1 1 7.5 6.572"></path></svg>Přidat k oblíbeným</a></li>
+            <li><a href="Stranka.dc.html" onMouseEnter="{{hv.act3.enter}}" onMouseLeave="{{hv.act3.leave}}" style="display: flex; align-items: center; gap: 8px; min-height: 36px; font-size: 14px; color: {{hv.act3.ink}}; text-decoration: {{hv.act3.ul}}; text-underline-offset: 3px; transition: color 0.15s"><svg aria-hidden="true" style="flex-shrink: 0" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0"></path><path d="M12 16v.01"></path><path d="M12 13a2 2 0 0 0 .914 -3.782a1.98 1.98 0 0 0 -2.414 .483"></path></svg>Potřebuji poradit</a></li>
+            <li><a href="Stranka.dc.html" onMouseEnter="{{hv.act4.enter}}" onMouseLeave="{{hv.act4.leave}}" style="display: flex; align-items: center; gap: 8px; min-height: 36px; font-size: 14px; color: {{hv.act4.ink}}; text-decoration: {{hv.act4.ul}}; text-underline-offset: 3px; transition: color 0.15s"><svg aria-hidden="true" style="flex-shrink: 0" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v10a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-10z"></path><path d="M3 7l9 6l9 -6"></path></svg><span>Doporučit produkt</span></a></li>
+            <li><a href="Stranka.dc.html" onMouseEnter="{{hv.act5.enter}}" onMouseLeave="{{hv.act5.leave}}" style="display: flex; align-items: center; gap: 8px; min-height: 36px; font-size: 14px; color: {{hv.act5.ink}}; text-decoration: {{hv.act5.ul}}; text-underline-offset: 3px; transition: color 0.15s"><svg aria-hidden="true" style="flex-shrink: 0" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 17h2a2 2 0 0 0 2 -2v-4a2 2 0 0 0 -2 -2h-14a2 2 0 0 0 -2 2v4a2 2 0 0 0 2 2h2"></path><path d="M17 9v-4a2 2 0 0 0 -2 -2h-6a2 2 0 0 0 -2 2v4"></path><path d="M7 13m0 2a2 2 0 0 1 2 -2h6a2 2 0 0 1 2 2v4a2 2 0 0 1 -2 2h-6a2 2 0 0 1 -2 -2z"></path></svg>Tisknout</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- ProductInfo: záložky Popis / Technické parametry -->
+    <section aria-label="Informace o produktu" style="padding: {{sec}}px 0">
+      <div role="tablist" aria-label="Informace o produktu" style="display: flex; gap: 4px; border-bottom: 1px solid #E1E5E7">
+        <sc-for list="{{infoTabs}}" as="it" hint-placeholder-count="2">
+          <button type="button" role="tab" aria-selected="{{it.selected}}" onClick="{{it.pick}}" onMouseEnter="{{it.enter}}" onMouseLeave="{{it.leave}}" style="{{it.style}}">{{it.label}}</button>
+        </sc-for>
+      </div>
+      <sc-if value="{{showDesc}}" hint-placeholder-val="{{true}}">
+        <div role="tabpanel" style="max-width: 820px; padding-top: 20px; color: #3E4A50">
+          <p style="margin: 0 0 10px"><strong style="color: #2B3033">Kombi boty na běžky SPINE RS ENERGY – sportovní KOMBI boty pro vázání NNN. Vhodné jak na klasiku tak i na bruslení.</strong></p>
+          <p style="margin: 0">Pevná plastová pata a vyztužená manžeta s páskem na suchý zip zajišťuje pevnost v kotníku a tím i velmi dobrý přenos síly na lyže.</p>
+        </div>
+      </sc-if>
+      <sc-if value="{{showParams}}" hint-placeholder-val="{{false}}">
+        <table role="tabpanel" style="width: 100%; max-width: 820px; margin-top: 12px; border-collapse: collapse; font-size: 14px">
+          <tbody>
+            <sc-for list="{{params}}" as="pr" hint-placeholder-count="10">
+              <tr><th scope="row" style="width: 40%; padding: 10px 12px 10px 0; border-bottom: 1px solid #E1E5E7; text-align: left; font-weight: 600; color: #5A666C">{{pr.k}}</th><td style="padding: 10px 0; border-bottom: 1px solid #E1E5E7">{{pr.v}}</td></tr>
+            </sc-for>
+          </tbody>
+        </table>
+      </sc-if>
+    </section>
+  </main>
+
+  <!-- Podobné produkty -->
+  <section aria-labelledby="h-sim" style="background: #F6F7F7">
+    <div style="max-width: 1745px; margin: 0 auto; padding: {{sec}}px {{gut}}px; box-sizing: border-box">
+      <div style="display: flex; align-items: center; justify-content: space-between; gap: 16px; margin: 0 0 20px">
+        <h2 id="h-sim" style="margin: 0; font-size: {{h2}}px; font-weight: 700; line-height: 1.2">Podobné produkty</h2>
+        <sc-if value="{{car.nav}}" hint-placeholder-val="{{true}}">
+          <div style="display: flex; gap: 8px; flex-shrink: 0">
+            <button type="button" aria-label="Předchozí produkty" aria-controls="sim-track" disabled="{{car.prevOff}}" onClick="{{car.prev}}" onMouseEnter="{{car.prevEnter}}" onMouseLeave="{{car.leave}}" style="{{car.prevStyle}}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6l6 6"></path></svg></button>
+            <button type="button" aria-label="Další produkty" aria-controls="sim-track" disabled="{{car.nextOff}}" onClick="{{car.next}}" onMouseEnter="{{car.nextEnter}}" onMouseLeave="{{car.leave}}" style="{{car.nextStyle}}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6l-6 6"></path></svg></button>
+          </div>
+        </sc-if>
+      </div>
+      <div role="region" aria-roledescription="karusel" aria-labelledby="h-sim" style="clip-path: inset(-8px 0 -28px 0)">
+       <div id="sim-track" style="display: flex; gap: {{gap}}px; transform: {{car.shift}}; transition: transform 0.4s ease">
+        <sc-for list="{{similar}}" as="p" hint-placeholder-count="4">
+          <div aria-hidden="{{p.hidden}}" style="flex: 0 0 {{cardW}}; min-width: 0; visibility: {{p.vis}}; transition: visibility 0.4s"><dc-import name="ProductCard" title="{{p.name}}" img="{{p.img}}" price="{{p.price}}" old="{{p.old}}" pct="{{p.pct}}" akce="{{p.akce}}" meta="{{p.meta}}" vars="{{p.vars}}" hint-size="100%,470px"></dc-import></div>
+        </sc-for>
+       </div>
+      </div>
+      <sc-if value="{{car.nav}}" hint-placeholder-val="{{true}}">
+        
+      </sc-if>
+    </div>
+  </section>
+
+  <dc-import name="Footer" hint-size="100%,700px"></dc-import>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1362,"height":2900}}'>
+class Component extends DCLogic {
+  componentDidMount() {
+    this._r = () => this.setState({ vw: window.innerWidth });
+    window.addEventListener('resize', this._r);
+    this._r();
+  }
+  componentWillUnmount() { window.removeEventListener('resize', this._r); }
+  renderVals() {
+    const s = this.state || {};
+    const vw = s.vw || 1362;
+    const desk = vw >= 1000, mid = vw >= 820, wide = vw >= 1362;
+    const gut = vw >= 1745 ? 48 : vw >= 1362 ? 40 : vw >= 1000 ? 32 : vw >= 820 ? 24 : vw >= 550 ? 20 : 16;
+    const gap = vw >= 1362 ? 24 : vw >= 820 ? 16 : 12;
+    const img = s.img || 0;
+    const N = 6;
+    const goImg = (i) => this.setState({ img: (i + N) % N });
+    const sizes = ['37', '38', '39', '40', '41', '42', '43', '44', '45', '46', '47'];
+    const v = s.v || null;
+    const qty = s.qty || 1;
+    const tab = s.tab || 'popis';
+    const B = '/_blob/';
+    const cols = vw >= 1745 ? 5 : vw >= 1000 ? 4 : vw >= 820 ? 3 : vw >= 480 ? 2 : 1;
+    /* Hover stavy: klíč najetého prvku je ve state.h; hv.<klíč> vrací hodnoty pro daný prvek */
+    const h = s.h || '';
+    const hv = (k) => {
+      const on = h === k;
+      return {
+        on: on, enter: () => this.setState({ h: k }), leave: () => this.setState({ h: '' }),
+        ul: on ? 'underline' : 'none', ulInv: on ? 'none' : 'underline', ink: on ? '#0077B3' : '#2B3033', soft: on ? '#F2F8FB' : 'transparent',
+        btn: on ? '#0077B3' : '#FFFFFF', btnInk: on ? '#FFFFFF' : '#2B3033',
+        obg: on ? '#0077B3' : '#FFFFFF', ofg: on ? '#FFFFFF' : '#0077B3', x: on ? '3px' : '0',
+        buy: on ? '#005C14' : '#007A1A', buyLift: on ? '0 6px 16px rgba(0, 92, 20, 0.28)' : 'none', fill: on ? '#005F8F' : '#0077B3', lift: on ? '0 6px 16px rgba(0, 95, 143, 0.28)' : 'none'
+      };
+    };
+    const HV = {};
+    ['c0', 'c1', 'c2', 'c3', 'c4', 'prev', 'next', 'guide', 'qm', 'qp', 'buy', 'tocart', 'avMore', 'brand', 'act0', 'act1', 'act2', 'act3', 'act4', 'act5', 'dx', 'dback', 'dgo'].forEach((k) => { HV[k] = hv(k); });
+    /* Karusel Podobné produkty: vždy celé karty, posun o 1 kartu šipkami, tečky = pozice */
+    const SIM = [
+        { name: 'SPINE GS X-Rider', img: B + 'a422ef7c6ad7de166c0c1c1c33eaa166', price: '2 290 Kč', old: '', pct: '', akce: false, meta: 'Boty na běžky · Kombi · SNS', vars: false },
+        { name: 'SPINE RS Comfort', img: B + '16262e4b052e8d81b24742dd1c286b7f', price: '1 780 Kč', old: '', pct: '', akce: false, meta: 'Boty na běžky · Klasika · NNN', vars: false },
+        { name: 'SPINE RS Smart (37-50)', img: B + '12dd60dbc0f5950e9a24bc15ab79c624', price: '1 450 Kč', old: '', pct: '', akce: false, meta: 'Boty na běžky · Klasika · NNN', vars: false },
+        { name: 'ATOMIC PRO S2', img: B + '841ddbdcd61e6183e2cf60dc9f0ad2ac', price: '2 990 Kč', old: '5 290 Kč', pct: '−43 %', akce: false, meta: 'Boty na běžky · Bruslení · Prolink', vars: false },
+        { name: 'SPINE GS Comfort', img: B + '768a16d243dd47253d2d94888304f8f0', price: '1 780 Kč', old: '', pct: '', akce: false, meta: 'Boty na běžky · Klasika · SNS', vars: false }
+      ];
+    const maxStart = Math.max(0, SIM.length - cols);
+    const start = Math.min(Math.max(0, s.cs || 0), maxStart);
+    const goC = (i) => this.setState({ cs: Math.min(Math.max(0, i), maxStart) });
+    const arrow = (k, off) => {
+      const on = h === k && !off;
+      return 'display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; padding: 0; border: 1px solid ' + (off ? '#E1E5E7' : on ? '#0077B3' : '#C3CACE') + '; border-radius: 4px; background: ' + (on ? '#0077B3' : '#FFFFFF') + '; color: ' + (off ? '#B5BEC2' : on ? '#FFFFFF' : '#2B3033') + '; cursor: ' + (off ? 'default' : 'pointer') + '; transition: background-color 0.15s, border-color 0.15s, color 0.15s';
+    };
+    const car = {
+      nav: maxStart > 0, prevOff: start === 0, nextOff: start === maxStart,
+      prev: () => goC(start - 1), next: () => goC(start + 1),
+      prevEnter: () => this.setState({ h: 'cprev' }), nextEnter: () => this.setState({ h: 'cnext' }), leave: () => this.setState({ h: '' }),
+      prevStyle: arrow('cprev', start === 0), nextStyle: arrow('cnext', start === maxStart),
+      shift: 'translateX(calc(' + (-start) + ' * ((100% - ' + (cols - 1) * gap + 'px) / ' + cols + ' + ' + gap + 'px)))',
+      dots: Array.from({ length: maxStart + 1 }, (x, i) => {
+        const on = i === start, hov = h === 'cdot' + i;
+        return { label: 'Pozice ' + (i + 1) + ' z ' + (maxStart + 1), current: on ? 'true' : 'false', go: () => goC(i), enter: () => this.setState({ h: 'cdot' + i }),
+          style: 'display: block; height: 8px; border-radius: 999px; transition: width 0.2s, background-color 0.15s; background: ' + (on ? '#0077B3' : hov ? '#87929A' : '#D0D6D9') + '; width: ' + (on ? '24px' : '8px') };
+      })
+    };
+    return {
+      /* Dostupnost – popup na najetí / fokus / klik */
+      avShow: !!s.av,
+      avExpanded: s.av ? 'true' : 'false',
+      avOpen: () => this.setState({ av: true }),
+      avClose: () => this.setState({ av: false, h: '' }),
+      avToggle: () => this.setState({ av: !s.av }),
+      avIco: s.av ? '#007A1A' : '#87929A',
+      avW: vw >= 420 ? 340 : 288,
+      avCols: vw >= 550 ? 'repeat(2, minmax(0, max-content))' : 'minmax(0, 1fr)',
+      metaCols: vw >= 420 ? 'repeat(3, max-content)' : 'minmax(0, 1fr)',
+      actCols: vw >= 550 ? 'repeat(3, minmax(0, 1fr))' : 'repeat(2, minmax(0, 1fr))',
+      gut: gut, gap: gap,
+      hv: HV,
+      sec: vw >= 1362 ? 56 : vw >= 1000 ? 52 : vw >= 820 ? 44 : 32,
+      h1: desk ? 30 : 24,
+      h2: desk ? 26 : 22,
+      cartCount: s.cart || 0,
+      pdpCols: mid ? (wide ? 'minmax(0, 7fr) minmax(0, 5fr)' : 'minmax(0, 1fr) minmax(0, 1fr)') : 'minmax(0, 1fr)',
+      pdpGap: wide ? 56 : mid ? 32 : 20,
+      imgNo: img + 1,
+      prevImg: () => goImg(img - 1),
+      nextImg: () => goImg(img + 1),
+      thumbGap: mid ? 10 : 6,
+      thumbs: Array.from({ length: N }, (_, i) => {
+        const hx = hv('th' + i);
+        return { label: 'Fotografie ' + (i + 1), current: i === img ? 'true' : 'false', pick: () => goImg(i), enter: hx.enter, leave: hx.leave,
+          style: 'display: block; width: 100%; aspect-ratio: 1 / 1; padding: 4px; box-sizing: border-box; border: ' + (i === img ? '2px solid #0077B3' : '1px solid ' + (hx.on ? '#87929A' : '#E1E5E7')) + '; border-radius: 4px; background: #FFFFFF; cursor: pointer; transition: border-color 0.15s' };
+      }),
+      variantName: v || 'vyberte',
+      variants: sizes.map((x) => {
+        const hx = hv('v' + x);
+        return { label: x, checked: x === v ? 'true' : 'false', pick: () => this.setState({ v: x, err: false }), enter: hx.enter, leave: hx.leave,
+          style: 'display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1px; min-height: 52px; padding: 4px; box-sizing: border-box; border: ' + (x === v ? '2px solid #0077B3' : '1px solid ' + (hx.on ? '#2B3033' : '#D0D6D9')) + '; border-radius: 4px; background: ' + (x === v ? '#F2F8FB' : '#FFFFFF') + '; color: #2B3033; font: inherit; font-size: 15px; font-weight: 700; cursor: pointer; transition: border-color 0.15s' };
+      }),
+      showErr: !!s.err,
+      qty: qty,
+      qtyMinus: () => this.setState({ qty: Math.max(1, qty - 1) }),
+      qtyPlus: () => this.setState({ qty: Math.min(20, qty + 1) }),
+      buy: () => { if (!v) { this.setState({ err: true }); return; } this.setState({ added: true, addQty: qty, cart: (s.cart || 0) + qty }); },
+      added: !!s.added,
+      addedTitle: (s.addQty || qty) + ' ' + ((s.addQty || qty) === 1 ? 'pár přidán' : 'páry přidány') + ' do košíku',
+      addedTotal: String((s.addQty || qty) * 2290).replace(/\B(?=(\d{3})+(?!\d))/g, ' ') + ' Kč',
+      cartLine: (() => { const n = 1 + (s.cart || 0), sum = 2999 + (s.cart || 0) * 2290; const w = n === 1 ? 'produkt' : n <= 4 ? 'produkty' : 'produktů'; return 'V košíku máte celkem ' + n + ' ' + w + ' dohromady za ' + String(sum).replace(/\B(?=(\d{3})+(?!\d))/g, ' ') + ' Kč.'; })(),
+      closeAdded: () => this.setState({ added: false, h: '' }),
+      dlgPad: vw >= 550 ? 28 : 18,
+      dlgCols: vw >= 550 ? '80px minmax(0, 1fr) auto' : '80px minmax(0, 1fr)',
+      dlgPriceAlign: vw >= 550 ? 'flex-end' : 'flex-start',
+      infoTabs: [['popis', 'Popis'], ['param', 'Technické parametry']].map((t) => {
+        const on = t[0] === tab, hx = hv('it' + t[0]);
+        return { label: t[1], selected: on ? 'true' : 'false', pick: () => this.setState({ tab: t[0] }), enter: hx.enter, leave: hx.leave,
+          style: 'min-height: 48px; margin-bottom: -1px; padding: 0 18px; border: 0; border-bottom: 3px solid ' + (on ? '#0077B3' : hx.on ? '#C3CACE' : 'transparent') + '; background: none; color: ' + (on || hx.on ? '#0077B3' : '#2B3033') + '; font: inherit; font-size: 15px; font-weight: 700; cursor: pointer; transition: color 0.15s, border-color 0.15s' };
+      }),
+      showDesc: tab === 'popis',
+      showParams: tab === 'param',
+      params: [['Určeno pro', 'muže i ženy'], ['Schopnosti lyžaře', 'sportovní lyžař'], ['Typ bot', 'KOMBI'], ['Hmotnost', '934 g / pár (velikost 42)'], ['Pata', 'plastový korpus s pevnou, vyztuženou manžetou'], ['Zapínání', 'suchý zip, klasické překryté šněrování'], ['Stélka', 'tvarovaná vnitřní'], ['Velikosti', 'EUR 37–47'], ['Vázání', 'SPINE RS, PROLINK, NNN'], ['Záruka', '24 měsíců']].map((r) => ({ k: r[0], v: r[1] })),
+      cardW: 'calc((100% - ' + (cols - 1) * gap + 'px) / ' + cols + ')',
+      similar: SIM.map((p, i) => { const off = i < start || i >= start + cols; return Object.assign({}, p, { hidden: off ? 'true' : 'false', vis: off ? 'hidden' : 'visible' }); }),
+      car: car
+    };
+  }
+}
+</script>
+</body>
+</html>

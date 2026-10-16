@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<title>SKOL – O nás</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#0077B3}a:hover{color:#005F8F}
+</style>
+</helmet>
+<!-- Obsahová stránka „O nás“: obsah podle aktuálního skol.net, poskládaná z bloků (bez levého rozcestníku).  -->
+<div style="width: 100%; background: #FFFFFF; font-family: 'Open Sans', 'Segoe UI', Arial, sans-serif; color: #2B3033; font-size: 15px; line-height: 1.55">
+  <dc-import name="Header" hint-size="100%,170px"></dc-import>
+
+  <main style="max-width: 1745px; margin: 0 auto; padding: 0 {{gut}}px {{sec}}px; box-sizing: border-box">
+    <nav aria-label="Drobečková navigace" style="padding: 14px 0; font-size: 13px; color: #5A666C">
+      <a href="HP.dc.html" onMouseEnter="{{hv.crumb.enter}}" onMouseLeave="{{hv.crumb.leave}}" style="text-decoration: {{hv.crumb.ul}}; text-underline-offset: 3px">Úvod</a> <span aria-hidden="true">›</span> <span aria-current="page">O nás</span>
+    </nav>
+
+    <!-- Blok: Nadpis + perex -->
+    <header style="max-width: 860px; padding: 8px 0 {{gap}}px">
+      <h1 style="margin: 0 0 14px; font-size: {{h1}}px; font-weight: 800; line-height: 1.15">O nás</h1>
+      <p style="margin: 0; font-size: {{lead}}px; line-height: 1.6; color: #3E4A50">Rodinná firma z Dražic u Benátek nad Jizerou, která pokračuje v tradici výroby běžkařského a lyžařského vázání SKOL.</p>
+    </header>
+
+    <!-- Blok: Velká fotka -->
+    <img src="/_blob/f1a73ae14c2ffb05c2e2dc8f342c34f9" alt="Běžkařka na upravené stopě v zimním lese" style="display: block; width: 100%; aspect-ratio: {{heroRatio}}; object-fit: cover; border-radius: 6px; object-position: 50% 30%">
+
+    <!-- Blok: Fakta -->
+    <ul style="display: grid; grid-template-columns: {{cols3}}; gap: 16px; margin: {{gap}}px 0 0; padding: 0; list-style: none">
+      <li style="display: flex; flex-direction: column; gap: 4px; padding: 20px; border-radius: 6px; background: #F6F7F7"><b style="font-size: 28px; font-weight: 800; line-height: 1.1; color: #0077B3">od 1960</b><span style="font-size: 14px; color: #3E4A50">se v Dražicích věnujeme bílým sportům</span></li>
+      <li style="display: flex; flex-direction: column; gap: 4px; padding: 20px; border-radius: 6px; background: #F6F7F7"><b style="font-size: 28px; font-weight: 800; line-height: 1.1; color: #0077B3">od 1998</b><span style="font-size: 14px; color: #3E4A50">rodinná firma Skol s.r.o.</span></li>
+      <li style="display: flex; flex-direction: column; gap: 4px; padding: 20px; border-radius: 6px; background: #F6F7F7"><b style="font-size: 28px; font-weight: 800; line-height: 1.1; color: #0077B3">vyzkoušeno</b><span style="font-size: 14px; color: #3E4A50">naše zboží máme osobně vyzkoušené</span></li>
+    </ul>
+
+    <!-- Blok: Text -->
+    <section style="max-width: 860px; padding-top: {{gap}}px">
+      <h2 style="margin: 0 0 12px; font-size: {{h2}}px; font-weight: 700; line-height: 1.2">Kdo jsme?</h2>
+      <p style="margin: 0 0 14px; font-size: 16px; line-height: 1.7; color: #3E4A50">Skol s r.o. je rodinná firma, která od roku 1998 pokračuje v tradici výroby běžkařského a lyžařského vázání v družstvu Dražice. To sice vzniklo v roce 1900, bílým sportům se ale začalo věnovat až v roce 1960. Ono slovo „až“ v předchozí větě je samozřejmě velmi relativní, protože je jasné, že od roku 1960 je opravdu na co navazovat.</p>
+      <p style="margin: 0; font-size: 16px; line-height: 1.7; color: #3E4A50">Přesto jsme nezůstali jen u vázání (mimochodem – to už právě od 60. let nese značku SKOL) – v nabídce se postupem času objevil i další sortiment zaměřený převážně na zimní sporty, ale dnes už také na některé sporty letní.</p>
+    </section>
+
+    <!-- Blok: Fotka + text -->
+    <section style="display: grid; grid-template-columns: {{splitCols}}; gap: 24px {{splitGap}}px; align-items: center; padding-top: {{gap}}px">
+      <img src="/_blob/0f22964d5c3ff9e03f62e04dcbee537a" alt="Montáž vázání na běžky" style="display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 6px">
+      <div>
+        <h2 style="margin: 0 0 12px; font-size: {{h2}}px; font-weight: 700; line-height: 1.2">Naše zboží máme osobně vyzkoušené</h2>
+        <p style="margin: 0 0 14px; font-size: 16px; line-height: 1.7; color: #3E4A50">Výhodou je, že naše zboží máme osobně vyzkoušeno. Nebojte se nás proto kontaktovat, rádi vám své zkušenosti předáme. Navštivte náš e-shop a přesvědčte se sami, že je z čeho vybírat.</p>
+        <a href="StrankaKontakt.dc.html" onMouseEnter="{{hv.cta1.enter}}" onMouseLeave="{{hv.cta1.leave}}" style="display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 18px; box-sizing: border-box; border: 1px solid #0077B3; border-radius: 4px; background: {{hv.cta1.obg}}; color: {{hv.cta1.ofg}}; font-weight: 600; text-decoration: none; transition: background-color 0.15s, color 0.15s">Kontaktujte nás<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="transform: translateX({{hv.cta1.x}}); transition: transform 0.15s"><path d="M5 12l14 0"></path><path d="M13 18l6 -6"></path><path d="M13 6l6 6"></path></svg></a>
+      </div>
+    </section>
+
+    <!-- Blok: Info box -->
+    <aside style="display: flex; gap: 14px; max-width: 860px; margin-top: {{gap}}px; padding: 18px 20px; box-sizing: border-box; border-left: 4px solid #0077B3; border-radius: 4px; background: #F2F8FB"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0; margin-top: 2px; color: #0077B3"><path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0"></path><path d="M12 9h.01"></path><path d="M11 12h1v4h1"></path></svg><p style="margin: 0; font-size: 15px; line-height: 1.6; color: #2B3033"><b>Nevíte si rady s výběrem?</b> V <a href="StrankaPoradna.dc.html" onMouseEnter="{{hv.por.enter}}" onMouseLeave="{{hv.por.leave}}" style="color: {{hv.por.link}}; font-weight: 600; text-decoration: {{hv.por.ul}}; text-underline-offset: 3px">Poradně</a> najdete tabulky délek lyží a holí, velikosti bot i návody k vázání.</p></aside>
+
+  </main>
+
+  <dc-import name="Footer" hint-size="100%,700px"></dc-import>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1362,"height":2300}}'>
+class Component extends DCLogic {
+  componentDidMount() {
+    this._r = () => this.setState({ vw: window.innerWidth });
+    window.addEventListener('resize', this._r);
+    this._r();
+  }
+  componentWillUnmount() { window.removeEventListener('resize', this._r); }
+  renderVals() {
+    const s = this.state || {};
+    const vw = s.vw || 1362;
+    const desk = vw >= 1000, mid = vw >= 820, sm = vw >= 550;
+    const gut = vw >= 1745 ? 48 : vw >= 1362 ? 40 : vw >= 1000 ? 32 : vw >= 820 ? 24 : vw >= 550 ? 20 : 16;
+    /* Hover stavy: klíč najetého prvku je ve state.h */
+    const h = s.h || '';
+    const hv = (k) => { const on = h === k; return { on: on, enter: () => this.setState({ h: k }), leave: () => this.setState({ h: '' }), ul: on ? 'underline' : 'none', link: on ? '#005F8F' : '#0077B3', obg: on ? '#0077B3' : '#FFFFFF', ofg: on ? '#FFFFFF' : '#0077B3', fill: on ? '#005F8F' : '#0077B3', line: on ? '#0077B3' : '#E1E5E7', shadow: on ? '0 6px 16px rgba(20, 30, 35, 0.08)' : 'none', x: on ? '3px' : '0', y: on ? '2px' : '0' }; };
+    const HV = {};
+    ['crumb', 'cta1', 'por'].forEach((k) => { HV[k] = hv(k); });
+
+    return {
+      gut: gut,
+      hv: HV,
+      sec: desk ? 64 : 40,
+      gap: desk ? 48 : 32,
+      h1: desk ? 36 : 28,
+      h2: desk ? 26 : 22,
+      lead: desk ? 19 : 17,
+      heroRatio: desk ? '21 / 8' : sm ? '16 / 9' : '4 / 3',
+      cols2: mid ? 'repeat(2, minmax(0, 1fr))' : 'minmax(0, 1fr)',
+      cols3: desk ? 'repeat(3, minmax(0, 1fr))' : sm ? 'repeat(2, minmax(0, 1fr))' : 'minmax(0, 1fr)',
+      cols4: desk ? 'repeat(4, minmax(0, 1fr))' : sm ? 'repeat(2, minmax(0, 1fr))' : 'minmax(0, 1fr)',
+      splitCols: mid ? 'minmax(0, 1fr) minmax(0, 1fr)' : 'minmax(0, 1fr)',
+      splitGap: vw >= 1362 ? 64 : 40,
+      revOrder: mid ? 2 : 0,
+      sideCols: desk ? '260px minmax(0, 1fr)' : 'minmax(0, 1fr)',
+      tocPos: desk ? 'sticky' : 'static'
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,400 @@
+<!doctype html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<title>Hlavička SKOL</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&amp;display=swap">
+<style>
+body{margin:0}
+input[type=search]::-webkit-search-cancel-button,input[type=search]::-webkit-search-decoration{-webkit-appearance:none;appearance:none;display:none}
+input[type=search]::-ms-clear{display:none;width:0;height:0}
+</style>
+</helmet>
+<header style="position: relative; z-index: 30; width: 100%; background: #FFFFFF; font-family: 'Open Sans', 'Segoe UI', Arial, sans-serif; color: #2B3033; font-size: 15px">
+
+  <sc-if value="{{desk}}" hint-placeholder-val="{{true}}">
+    <div style="background: #F6F7F7; font-size: 13px">
+      <div style="max-width: 1745px; margin: 0 auto; padding: 0 {{gut}}px; min-height: 36px; display: flex; align-items: center; gap: 20px">
+        <div style="display: flex; align-items: center; gap: 20px; flex: 1 1 auto; min-width: 0; overflow-x: auto; white-space: nowrap">
+          <sc-for list="{{top}}" as="t" hint-placeholder-count="7">
+            <a href="{{t.href}}" onMouseEnter="{{t.enter}}" onMouseLeave="{{t.leave}}" style="{{t.style}}">{{t.label}}</a>
+          </sc-for>
+        </div>
+        <!-- Přepínač jazykové mutace: obsah dle skol.net (CZ / EN / SK – samostatné domény), otevírá se najetím i klikem -->
+        <div onMouseEnter="{{langOpen}}" onMouseLeave="{{langClose}}" style="position: relative; flex-shrink: 0; margin-right: -10px">
+          <button type="button" aria-label="Jazyk: Čeština" aria-haspopup="true" aria-expanded="{{langExpanded}}" onClick="{{langToggle}}" style="{{langBtn.style}}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0"></path><path d="M3.6 9h16.8"></path><path d="M3.6 15h16.8"></path><path d="M11.5 3a17 17 0 0 0 0 18"></path><path d="M12.5 3a17 17 0 0 1 0 18"></path></svg><span>CZ</span><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="{{langChev}}"><path d="M6 9l6 6l6 -6"></path></svg></button>
+          <sc-if value="{{langShow}}" hint-placeholder-val="{{false}}">
+            <div style="position: absolute; right: 0; top: 100%; z-index: 50; padding-top: 4px">
+              <ul role="menu" aria-label="Jazyková verze" style="width: 200px; margin: 0; padding: 6px; box-sizing: border-box; list-style: none; border: 1px solid #E1E5E7; border-radius: 6px; background: #FFFFFF; box-shadow: 0 16px 32px rgba(20, 30, 35, 0.16)">
+                <sc-for list="{{langs}}" as="l" hint-placeholder-count="3">
+                  <li role="none"><a role="menuitem" href="{{l.href}}" hreflang="{{l.code}}" aria-current="{{l.current}}" onMouseEnter="{{l.enter}}" onMouseLeave="{{l.leave}}" style="{{l.style}}"><b style="{{l.chip}}">{{l.short}}</b><span style="flex: 1">{{l.label}}</span><sc-if value="{{l.on}}" hint-placeholder-val="{{false}}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5l10 -10"></path></svg></sc-if></a></li>
+                </sc-for>
+              </ul>
+            </div>
+          </sc-if>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <div style="max-width: 1745px; margin: 0 auto; padding: 0 {{gut}}px; min-height: {{mainH}}px; display: flex; align-items: center; gap: 16px">
+    <a href="HP.dc.html" aria-label="SKOL – úvodní stránka" onMouseEnter="{{logo.enter}}" onMouseLeave="{{logo.leave}}" style="{{logo.style}}"><img src="/_blob/2db9f53576ca6848fdb40cda2254a9af" alt="SKOL – vše pro běžky" style="display: block; height: {{logoH}}px; width: auto"></a>
+    <sc-if value="{{desk}}" hint-placeholder-val="{{true}}">
+      <form role="search" style="position: relative; flex: 1 1 auto; min-width: 0; margin: 0 16px">
+        <label onMouseEnter="{{search.enter}}" onMouseLeave="{{search.leave}}" style="{{search.style}}"><span style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">Hledat v obchodě</span><input type="search" value="{{q}}" onChange="{{onQ}}" placeholder="Hledat běžky, boty, vázání…" style="flex: 1; min-width: 0; height: 100%; padding: 0 12px; border: 0; background: none; font: inherit; outline: none"><sc-if value="{{hasQ}}" hint-placeholder-val="{{false}}"><button type="button" aria-label="Vymazat hledání" onClick="{{clearQ}}" onMouseEnter="{{clr.enter}}" onMouseLeave="{{clr.leave}}" style="{{clr.style}}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6l-12 12"></path><path d="M6 6l12 12"></path></svg></button></sc-if><span style="display: inline-flex; align-items: center; justify-content: center; width: 48px; height: 100%; border-left: 1px solid #E1E5E7; color: #0077B3"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0"></path><path d="M21 21l-6 -6"></path></svg></span></label>
+        <!-- Našeptávač: co nejjednodušší – max. 5 produktů (foto, název, cena) + odkaz na všechny výsledky -->
+        <sc-if value="{{hasQ}}" hint-placeholder-val="{{false}}">
+          <div role="listbox" aria-label="Návrhy vyhledávání" style="position: absolute; left: 0; right: 0; top: 100%; z-index: 45; margin-top: 4px; border: 1px solid #E1E5E7; border-radius: 6px; background: #FFFFFF; box-shadow: 0 16px 32px rgba(20, 30, 35, 0.16); overflow: hidden; font-size: 14px">
+            <sc-if value="{{sgAny}}" hint-placeholder-val="{{true}}">
+              <sc-for list="{{sg}}" as="g" hint-placeholder-count="4">
+                <a role="option" href="Detail.dc.html" onMouseEnter="{{g.enter}}" onMouseLeave="{{g.leave}}" style="{{g.style}}"><img src="{{g.img}}" alt="" style="display: block; width: 44px; height: 44px; object-fit: contain; flex-shrink: 0"><span style="flex: 1; min-width: 0; font-weight: 600; line-height: 1.35">{{g.name}}</span><b style="flex-shrink: 0; font-variant-numeric: tabular-nums; color: {{g.priceColor}}">{{g.price}}</b></a>
+              </sc-for>
+              <a href="Kategorie.dc.html" onMouseEnter="{{sgAll.enter}}" onMouseLeave="{{sgAll.leave}}" style="{{sgAll.style}}">Zobrazit všechny výsledky<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l14 0"></path><path d="M13 18l6 -6"></path><path d="M13 6l6 6"></path></svg></a>
+            </sc-if>
+            <sc-if value="{{sgNone}}" hint-placeholder-val="{{false}}">
+              <div style="padding: 16px; color: #5A666C">Pro „{{q}}“ jsme nic nenašli.</div>
+            </sc-if>
+          </div>
+        </sc-if>
+      </form>
+      <div style="display: flex; align-items: center; gap: 28px; flex-shrink: 0; margin-right: 8px">
+        <a href="Stranka.dc.html" onMouseEnter="{{phone.enter}}" onMouseLeave="{{phone.leave}}" style="display: inline-flex; align-items: center; gap: 6px; color: #2B3033; text-decoration: none; white-space: nowrap"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h4l2 5l-2.5 1.5a11 11 0 0 0 5 5l1.5 -2.5l5 2v4a2 2 0 0 1 -2 2a16 16 0 0 1 -15 -15a2 2 0 0 1 2 -2"></path></svg><span style="display: flex; flex-direction: column; line-height: 1.3"><b style="{{phone.style}}">+420 326 373 000</b><small style="font-size: 12px; color: #5A666C">Po–Pá 8:30–16:00</small></span></a>
+        <sc-if value="{{wide}}" hint-placeholder-val="{{true}}"><a href="Stranka.dc.html" onMouseEnter="{{mail.enter}}" onMouseLeave="{{mail.leave}}" style="display: inline-flex; align-items: center; gap: 6px; color: #2B3033; text-decoration: none; white-space: nowrap"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v10a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-10z"></path><path d="M3 7l9 6l9 -6"></path></svg><b style="{{mail.style}}">info@skol.net</b></a></sc-if>
+      </div>
+    </sc-if>
+    <div style="display: flex; align-items: center; gap: 2px; margin-left: auto; flex-shrink: 0">
+      <button type="button" aria-label="Přihlášení" aria-haspopup="dialog" onClick="{{openLogin}}" onMouseEnter="{{login.enter}}" onMouseLeave="{{login.leave}}" style="{{login.style}}"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0"></path><path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2"></path></svg><sc-if value="{{desk}}" hint-placeholder-val="{{true}}"><span>Přihlášení</span></sc-if></button>
+      <div onMouseEnter="{{mcOpen}}" onMouseLeave="{{mcClose}}" style="position: relative">
+      <a href="Kosik.dc.html" aria-label="{{cartLabel}}" aria-haspopup="true" aria-expanded="{{mcExpanded}}" onMouseEnter="{{cart.enter}}" onMouseLeave="{{cart.leave}}" style="{{cart.style}}"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6.331 8h11.339a2 2 0 0 1 1.977 2.304l-1.255 8.152a3 3 0 0 1 -2.966 2.544h-6.852a3 3 0 0 1 -2.965 -2.544l-1.255 -8.152a2 2 0 0 1 1.977 -2.304z"></path><path d="M9 11v-5a3 3 0 0 1 6 0v5"></path></svg><sc-if value="{{desk}}" hint-placeholder-val="{{true}}"><span>Košík</span></sc-if><sc-if value="{{hasCart}}" hint-placeholder-val="{{false}}"><b style="position: absolute; top: 2px; right: 4px; min-width: 18px; height: 18px; padding: 0 5px; box-sizing: border-box; border-radius: 999px; background: #B40808; color: #FFFFFF; font-size: 11px; line-height: 18px; text-align: center">{{cartCount}}</b></sc-if></a>
+        <!-- Mini košík: na hover (desktop), před vstupem do košíku -->
+        <sc-if value="{{mcShow}}" hint-placeholder-val="{{false}}">
+          <div style="position: absolute; right: 0; top: 100%; z-index: 40; width: 380px; padding-top: 8px">
+            <div role="region" aria-label="Obsah košíku" style="border: 1px solid #E1E5E7; border-radius: 6px; background: #FFFFFF; box-shadow: 0 16px 32px rgba(20, 30, 35, 0.16); font-size: 14px; color: #2B3033">
+              <sc-if value="{{hasCart}}" hint-placeholder-val="{{true}}">
+                <div style="display: flex; align-items: baseline; justify-content: space-between; padding: 16px 18px 8px"><b style="font-size: 16px">Košík</b><span style="color: #5A666C">{{cartCount}} ks</span></div>
+                <ul style="margin: 0; padding: 0 18px; list-style: none">
+                  <sc-for list="{{mcItems}}" as="m" hint-placeholder-count="2">
+                    <li style="display: grid; grid-template-columns: 56px minmax(0, 1fr) auto; gap: 12px; align-items: center; padding: 10px 0; border-top: 1px solid #E1E5E7">
+                      <img src="{{m.img}}" alt="" style="display: block; width: 56px; height: 56px; object-fit: contain; border: 1px solid #E1E5E7; border-radius: 4px; box-sizing: border-box">
+                      <span style="display: flex; flex-direction: column; gap: 2px; min-width: 0"><a href="Detail.dc.html" style="color: #2B3033; font-weight: 600; line-height: 1.35; text-decoration: none">{{m.name}}</a><span style="font-size: 12px; color: #5A666C">{{m.variant}} · {{m.qty}} ks</span><b style="font-variant-numeric: tabular-nums; color: {{m.priceColor}}">{{m.price}}</b></span>
+                      <button type="button" aria-label="Odebrat z košíku" onMouseEnter="{{m.rm.enter}}" onMouseLeave="{{m.rm.leave}}" style="{{m.rm.style}}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7l16 0"></path><path d="M10 11l0 6"></path><path d="M14 11l0 6"></path><path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12"></path><path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3"></path></svg></button>
+                    </li>
+                  </sc-for>
+                </ul>
+                <div style="display: flex; flex-direction: column; gap: 12px; padding: 14px 18px 18px; border-top: 1px solid #E1E5E7; background: #F6F7F7; border-radius: 0 0 6px 6px">
+                  <div style="display: flex; justify-content: space-between; gap: 12px; font-size: 16px; font-weight: 800; font-variant-numeric: tabular-nums"><span>Celkem s DPH</span><span>{{mcTotal}}</span></div>
+                  <span style="font-size: 13px; color: #5A666C">Doprava se spočítá v dalším kroku.</span>
+                  <a href="Kosik.dc.html" onMouseEnter="{{mcGo.enter}}" onMouseLeave="{{mcGo.leave}}" style="{{mcGo.style}}">Přejít do košíku<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l14 0"></path><path d="M13 18l6 -6"></path><path d="M13 6l6 6"></path></svg></a>
+                </div>
+              </sc-if>
+              <sc-if value="{{noCart}}" hint-placeholder-val="{{false}}">
+                <div style="display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 28px 20px; text-align: center"><b style="font-size: 16px">Košík je prázdný</b><span style="color: #5A666C">Vložte si do něj něco z nabídky.</span></div>
+              </sc-if>
+            </div>
+          </div>
+        </sc-if>
+      </div>
+      <!-- Hamburger: vpravo za košíkem, zvýrazněný (plné modré tlačítko), aby se odlišil od ostatních ikon -->
+      <sc-if value="{{mob}}" hint-placeholder-val="{{false}}">
+      <button type="button" aria-label="{{menuLabel}}" aria-expanded="{{menuExpanded}}" onClick="{{toggleMenu}}" onMouseEnter="{{burger.enter}}" onMouseLeave="{{burger.leave}}" style="{{burger.style}}"><sc-if value="{{menuOpen}}" hint-placeholder-val="{{false}}"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><path d="M18 6l-12 12"></path><path d="M6 6l12 12"></path></svg></sc-if><sc-if value="{{menuClosed}}" hint-placeholder-val="{{true}}"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6l16 0"></path><path d="M4 12l16 0"></path><path d="M4 18l16 0"></path></svg></sc-if></button>
+    </sc-if>
+    </div>
+  </div>
+
+  <sc-if value="{{mob}}" hint-placeholder-val="{{false}}">
+    <div style="padding: 0 {{gut}}px 12px">
+      <form role="search" style="position: relative; margin: 0">
+        <label style="display: flex; align-items: center; height: 44px; border: 1px solid #87929A; border-radius: 4px; background: #FFFFFF"><span style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">Hledat v obchodě</span><input type="search" value="{{q}}" onChange="{{onQ}}" placeholder="Hledat běžky, boty, vázání…" style="flex: 1; min-width: 0; height: 100%; padding: 0 12px; border: 0; background: none; font: inherit; outline: none"><sc-if value="{{hasQ}}" hint-placeholder-val="{{false}}"><button type="button" aria-label="Vymazat hledání" onClick="{{clearQ}}" onMouseEnter="{{clr.enter}}" onMouseLeave="{{clr.leave}}" style="{{clr.style}}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6l-12 12"></path><path d="M6 6l12 12"></path></svg></button></sc-if><span style="display: inline-flex; align-items: center; justify-content: center; width: 48px; height: 100%; border-left: 1px solid #E1E5E7; color: #0077B3"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0"></path><path d="M21 21l-6 -6"></path></svg></span></label>
+        <!-- Našeptávač: co nejjednodušší – max. 5 produktů (foto, název, cena) + odkaz na všechny výsledky -->
+        <sc-if value="{{hasQ}}" hint-placeholder-val="{{false}}">
+          <div role="listbox" aria-label="Návrhy vyhledávání" style="position: absolute; left: 0; right: 0; top: 100%; z-index: 45; margin-top: 4px; border: 1px solid #E1E5E7; border-radius: 6px; background: #FFFFFF; box-shadow: 0 16px 32px rgba(20, 30, 35, 0.16); overflow: hidden; font-size: 14px">
+            <sc-if value="{{sgAny}}" hint-placeholder-val="{{true}}">
+              <sc-for list="{{sg}}" as="g" hint-placeholder-count="4">
+                <a role="option" href="Detail.dc.html" onMouseEnter="{{g.enter}}" onMouseLeave="{{g.leave}}" style="{{g.style}}"><img src="{{g.img}}" alt="" style="display: block; width: 44px; height: 44px; object-fit: contain; flex-shrink: 0"><span style="flex: 1; min-width: 0; font-weight: 600; line-height: 1.35">{{g.name}}</span><b style="flex-shrink: 0; font-variant-numeric: tabular-nums; color: {{g.priceColor}}">{{g.price}}</b></a>
+              </sc-for>
+              <a href="Kategorie.dc.html" onMouseEnter="{{sgAll.enter}}" onMouseLeave="{{sgAll.leave}}" style="{{sgAll.style}}">Zobrazit všechny výsledky<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l14 0"></path><path d="M13 18l6 -6"></path><path d="M13 6l6 6"></path></svg></a>
+            </sc-if>
+            <sc-if value="{{sgNone}}" hint-placeholder-val="{{false}}">
+              <div style="padding: 16px; color: #5A666C">Pro „{{q}}“ jsme nic nenašli.</div>
+            </sc-if>
+          </div>
+        </sc-if>
+      </form>
+    </div>
+  </sc-if>
+
+  <!-- Hlavní menu s rozbalovacím panelem (mega menu) při najetí myší -->
+  <sc-if value="{{desk}}" hint-placeholder-val="{{true}}">
+    <div onMouseLeave="{{megaClose}}" style="position: relative">
+      <nav aria-label="Kategorie" style="background: #0077B3">
+        <div style="max-width: 1745px; margin: 0 auto; padding: 0 {{gut}}px; box-sizing: border-box; display: flex; justify-content: space-between">
+          <sc-for list="{{cats}}" as="c" hint-placeholder-count="7">
+            <a href="Kategorie.dc.html" aria-expanded="{{c.expanded}}" onMouseEnter="{{c.enter}}" style="{{c.style}}">{{c.label}}<sc-if value="{{c.hasSub}}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="{{c.chev}}"><path d="M6 9l6 6l6 -6"></path></svg></sc-if></a>
+          </sc-for>
+        </div>
+      </nav>
+      <sc-if value="{{megaOpen}}" hint-placeholder-val="{{false}}">
+        <div style="position: absolute; left: 0; right: 0; top: 100%; background: #FFFFFF; box-shadow: 0 16px 32px rgba(20, 30, 35, 0.16)">
+          <!-- Mega menu: struktura kategorií dle skol.net – podkategorie (s miniaturou) a pod nimi jejich podkategorie; bez nadpisu kategorie a bez banneru -->
+          <ul style="max-width: 1745px; margin: 0 auto; padding: 28px {{gut}}px 32px; box-sizing: border-box; display: grid; grid-template-columns: repeat({{megaCols}}, minmax(0, 1fr)); gap: 28px 32px; list-style: none">
+            <sc-for list="{{mega.subs}}" as="m" hint-placeholder-count="3">
+              <li style="display: flex; flex-direction: column; gap: 6px; min-width: 0"><a href="Kategorie.dc.html" onMouseEnter="{{m.enter}}" onMouseLeave="{{m.leave}}" style="{{m.style}}"><span style="display: flex; align-items: center; justify-content: center; flex-shrink: 0; width: 56px; height: 56px; overflow: hidden; border-radius: 4px; background: {{m.ph}}; color: #87929A"><sc-if value="{{m.hasImg}}" hint-placeholder-val="{{true}}"><img src="{{m.img}}" alt="" style="display: block; width: 100%; height: 100%; object-fit: {{m.fit}}"></sc-if><sc-if value="{{m.noImg}}" hint-placeholder-val="{{false}}"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 8h.01"></path><path d="M3 6a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v12a3 3 0 0 1 -3 3h-12a3 3 0 0 1 -3 -3v-12z"></path><path d="M3 16l5 -5c.928 -.893 2.072 -.893 3 0l5 5"></path><path d="M14 14l1 -1c.928 -.893 2.072 -.893 3 0l3 3"></path></svg></sc-if></span><span>{{m.label}}</span></a>
+                <sc-if value="{{m.hasKids}}" hint-placeholder-val="{{true}}">
+                  <ul style="display: flex; flex-direction: column; margin: 0; padding: 0 0 0 68px; list-style: none">
+                    <sc-for list="{{m.kids}}" as="k" hint-placeholder-count="3">
+                      <li><a href="Kategorie.dc.html" onMouseEnter="{{k.enter}}" onMouseLeave="{{k.leave}}" style="{{k.style}}">{{k.label}}</a></li>
+                    </sc-for>
+                  </ul>
+                </sc-if>
+              </li>
+            </sc-for>
+          </ul>
+        </div>
+      </sc-if>
+    </div>
+  </sc-if>
+  <sc-if value="{{mob}}" hint-placeholder-val="{{false}}"><div style="height: 1px; background: #E1E5E7"></div></sc-if>
+
+  <sc-if value="{{menuOpen}}" hint-placeholder-val="{{false}}">
+    <div style="position: absolute; left: 0; right: 0; top: 100%; z-index: 20; background: #FFFFFF; border-bottom: 1px solid #E1E5E7; box-shadow: 0 12px 24px rgba(20, 30, 35, 0.14)">
+      <nav aria-label="Kategorie" style="display: flex; flex-direction: column">
+        <sc-for list="{{mcats}}" as="c" hint-placeholder-count="7">
+          <a href="Kategorie.dc.html" onMouseEnter="{{c.enter}}" onMouseLeave="{{c.leave}}" style="{{c.style}}">{{c.label}}<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0077B3" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6l-6 6"></path></svg></a>
+        </sc-for>
+      </nav>
+      <div style="display: flex; flex-direction: column; gap: 4px; padding: 14px {{gut}}px 18px; background: #F6F7F7; font-size: 14px">
+        <a href="Stranka.dc.html" style="color: #3E4A50; text-decoration: none; padding: 6px 0">Poradna</a>
+        <a href="Stranka.dc.html" style="color: #3E4A50; text-decoration: none; padding: 6px 0">O nás</a>
+        <a href="Stranka.dc.html" style="color: #B40808; font-weight: 600; text-decoration: none; padding: 6px 0">Půjčovna – nově otevřeno</a>
+        <span style="padding-top: 8px; color: #5A666C">+420 326 373 000 · info@skol.net · Po–Pá 8:30–16:00</span>
+        <div style="display: flex; align-items: center; gap: 12px; margin-top: 10px; padding-top: 14px; border-top: 1px solid #E1E5E7">
+          <span style="color: #5A666C">Jazyk</span>
+          <div role="group" aria-label="Jazyková verze" style="display: flex; gap: 6px">
+            <sc-for list="{{langs}}" as="l" hint-placeholder-count="3">
+              <a href="{{l.href}}" hreflang="{{l.code}}" aria-current="{{l.current}}" aria-label="{{l.label}}" style="{{l.pill}}">{{l.short}}</a>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+  <!-- Modal přihlášení (obsah podle skol.net: e-mail + heslo, registrace, velkoobchod; bez přihlášení přes sociální sítě) -->
+  <sc-if value="{{loginOpen}}" hint-placeholder-val="{{false}}">
+    <div style="position: fixed; inset: 0; z-index: 100; display: flex; align-items: center; justify-content: center; padding: 16px; box-sizing: border-box; overflow-y: auto">
+      <button type="button" tabindex="-1" aria-hidden="true" onClick="{{closeLogin}}" style="position: absolute; inset: 0; width: 100%; height: 100%; padding: 0; border: 0; background: rgba(20, 30, 35, 0.55); cursor: default"></button>
+      <div role="dialog" aria-modal="true" aria-labelledby="login-title" style="position: relative; width: 100%; max-width: 440px; box-sizing: border-box; padding: {{lgPad}}px; border-radius: 6px; background: #FFFFFF; box-shadow: 0 24px 48px rgba(20, 30, 35, 0.24); font-size: 15px; color: #2B3033">
+        <button type="button" aria-label="Zavřít" onClick="{{closeLogin}}" onMouseEnter="{{lgClose.enter}}" onMouseLeave="{{lgClose.leave}}" style="{{lgClose.style}}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6l-12 12"></path><path d="M6 6l12 12"></path></svg></button>
+        <h2 id="login-title" style="margin: 0 0 20px; font-size: 24px; font-weight: 800; line-height: 1.2">Přihlášení</h2>
+        <form style="display: flex; flex-direction: column; gap: 16px; margin: 0">
+          <label style="display: flex; flex-direction: column; gap: 6px; font-size: 14px; font-weight: 600">E-mail<input type="email" autocomplete="email" placeholder="vas@email.cz" style="height: 48px; padding: 0 14px; box-sizing: border-box; border: 1px solid #87929A; border-radius: 4px; background: #FFFFFF; font: inherit; font-size: 15px; font-weight: 400; color: #2B3033"></label>
+          <div style="display: flex; flex-direction: column; gap: 6px">
+            <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 12px"><label for="login-pw" style="font-size: 14px; font-weight: 600">Heslo</label><a href="Stranka.dc.html" onMouseEnter="{{lgForgot.enter}}" onMouseLeave="{{lgForgot.leave}}" style="{{lgForgot.style}}">Zapomenuté heslo?</a></div>
+            <div style="display: flex; align-items: center; height: 48px; box-sizing: border-box; border: 1px solid #87929A; border-radius: 4px; background: #FFFFFF">
+              <input id="login-pw" type="{{pwType}}" autocomplete="current-password" style="flex: 1; min-width: 0; height: 100%; padding: 0 14px; border: 0; background: none; font: inherit; font-size: 15px; color: #2B3033; outline: none">
+              <button type="button" aria-label="{{pwLabel}}" aria-pressed="{{pwPressed}}" onClick="{{togglePw}}" onMouseEnter="{{lgEye.enter}}" onMouseLeave="{{lgEye.leave}}" style="{{lgEye.style}}"><sc-if value="{{pwShown}}" hint-placeholder-val="{{false}}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.585 10.587a2 2 0 0 0 2.829 2.828"></path><path d="M16.681 16.673a8.717 8.717 0 0 1 -4.681 1.327c-3.6 0 -6.6 -2 -9 -6c1.272 -2.12 2.712 -3.678 4.32 -4.674m2.86 -1.146a9.055 9.055 0 0 1 1.82 -.18c3.6 0 6.6 2 9 6c-.666 1.11 -1.379 2.067 -2.138 2.87"></path><path d="M3 3l18 18"></path></svg></sc-if><sc-if value="{{pwHidden}}" hint-placeholder-val="{{true}}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0"></path><path d="M21 12c-2.4 4 -5.4 6 -9 6c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6"></path></svg></sc-if></button>
+            </div>
+          </div>
+          <label style="display: flex; align-items: center; gap: 10px; min-height: 24px; font-size: 14px; cursor: pointer"><input type="checkbox" style="width: 18px; height: 18px; margin: 0; accent-color: #0077B3">Zůstat přihlášen</label>
+          <button type="button" onMouseEnter="{{lgSubmit.enter}}" onMouseLeave="{{lgSubmit.leave}}" style="{{lgSubmit.style}}">Přihlásit se</button>
+          <p style="margin: 0; font-size: 14px; color: #3E4A50; text-align: center">Nemáte účet? <a href="Stranka.dc.html" onMouseEnter="{{lgReg.enter}}" onMouseLeave="{{lgReg.leave}}" style="{{lgReg.style}}">Registrujte se</a></p>
+        </form>
+        <div style="display: flex; flex-direction: column; gap: 6px; margin-top: 20px; padding-top: 18px; border-top: 1px solid #E1E5E7; font-size: 14px; color: #3E4A50">
+          <a href="Stranka.dc.html" onMouseEnter="{{lgB2b.enter}}" onMouseLeave="{{lgB2b.leave}}" style="{{lgB2b.style}}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 21l18 0"></path><path d="M5 21v-14l8 -4v18"></path><path d="M19 21v-10l-6 -4"></path><path d="M9 9l0 .01"></path><path d="M9 12l0 .01"></path><path d="M9 15l0 .01"></path><path d="M9 18l0 .01"></path></svg>Velkoobchod – přihlášení</a>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+</header>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"active":{"editor":"enum","options":["","Akční produkty a sety","Běžecké lyžování","Sjezdové lyžování","Lední brusle","Oblečení","Treking","Další sporty"],"default":"","section":"Stav"},"cartCount":{"editor":"int","min":0,"max":99,"default":0,"section":"Stav"},"$preview":{"width":1362,"height":180}}'>
+class Component extends DCLogic {
+  componentDidMount() {
+    this._r = () => this.setState({ vw: window.innerWidth });
+    window.addEventListener('resize', this._r);
+    this._r();
+  }
+  componentWillUnmount() { window.removeEventListener('resize', this._r); }
+  renderVals() {
+    /* Breakpointy: pod 1200 px hamburger a hledání pod hlavičkou (7 kategorií se pod 1200 px nevejde do jednoho řádku), od 1362 px i e-mail a plná velikost menu.
+       Hover stavy: klíč najetého prvku je ve state.h, rozbalené mega menu ve state.mega. */
+    const s = this.state || {};
+    const vw = s.vw || 1362;
+    const desk = vw >= 1200;
+    /* Hlavní menu: položky roztažené přes celou šíři (space-between), bez vodorovného scrollu; menší písmo a odsazení do 1362 px */
+    const navPad = vw >= 1362 ? 16 : 12, navFs = vw >= 1362 ? 15 : 14;
+    const gut = vw >= 1745 ? 48 : vw >= 1362 ? 40 : vw >= 1000 ? 32 : vw >= 820 ? 24 : vw >= 550 ? 20 : 16;
+    const h = s.h || '';
+    const H = (k, base, on) => ({ style: base + (h === k ? on : ''), enter: () => this.setState({ h: k }), leave: () => this.setState({ h: '' }) });
+    const active = this.props.active ?? '';
+    /* Kategorie dle skol.net: [název, [[podkategorie, [podpodkategorie…]], …]] */
+    const CATS = [
+      ['Akční produkty a sety', [['Sety', []]]],
+      ['Běžecké lyžování', [['Kolečkové běžky a boty', ['Boty pro kolečkové lyže GS (SNS)', 'Boty pro kolečkové lyže RS (NNN)', 'Kolečkové běžky']], ['Běžecké lyžování', ['Běžky', 'Boty na běžky', 'Hole na běžky', 'Vázání na běžky', 'Vosky']], ['Montáž vázání', []]]],
+      ['Sjezdové lyžování', [['Sjezdové lyže', []], ['Sjezdové boty', []], ['Sjezdové helmy', ['Chrániče']], ['Sjezdové hole', []], ['Sjezdové brýle', []], ['Použité sjezdové lyže a boty', []]]],
+      ['Lední brusle', [['Dámské brusle', []], ['Pánské brusle', []], ['Dětské brusle', []]]],
+      ['Oblečení', [['Oblečení SWIX - běžky', ['Dámské', 'Pánské', 'Dětské', 'Čepice']], ['Oblečení ATOMIC', ['Čepice']], ['Sportovní brýle', []], ['Rukavice', []], ['Sportovní ponožky', []]]],
+      ['Treking', [['Trekové boty', []], ['Trekové hole a NW', []]]],
+      ['Další sporty', [['In line brusle', ['In line - doplňky']], ['Ostatní zboží', ['Dárkové poukazy']]]]
+    ];
+    const n = Number(this.props.cartCount ?? 0) || 0;
+    const open = !!s.open && !desk;
+    const mega = (desk && s.mega != null && CATS[s.mega] && CATS[s.mega][1].length) ? s.mega : null;
+    const T = 'transition: color 0.15s, background-color 0.15s, border-color 0.15s, box-shadow 0.15s, opacity 0.15s; ';
+    const iconBtn = 'position: relative; display: inline-flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; min-width: ' + (desk ? 64 : 44) + 'px; height: 52px; border-radius: 4px; color: #2B3033; font-size: 11px; text-decoration: none; ' + T;
+    const topLinks = ['Poradna', 'Kontakty', 'O nás', 'Obchodní podmínky', 'Prodejny', 'Půjčovna – nově otevřeno', 'Velkoobchod – přihlášení'];
+    /* Data pro našeptávač (ukázkové produkty); filtr bez diakritiky a velikosti písmen */
+    const norm = (t) => String(t).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    const PRODS = [
+      { name: 'SPINE RS ENERGY 258', img: '/_blob/b0be7b43ecd1a13649ccac122713bf8d', price: '2 290 Kč', priceColor: '#B40808', tags: 'boty na bezky' },
+      { name: 'set FISCHER Fibre Crown + vázání Tour Step IN', img: '/_blob/60a9456fdff1e0176aa8766acd35a1ca', price: '2 999 Kč', priceColor: '#B40808', tags: 'bezky set lyze vazani' },
+      { name: 'Salomon Escape PLUS Prolink Black/White 13', img: '/_blob/1711b0ff02d94eb98561c59cff85cd7c', price: '1 990 Kč', priceColor: '#2B3033', tags: 'boty na bezky' },
+      { name: 'ATOMIC Savor 35 Black', img: '/_blob/45aea8d263a1acc7fa813e2e58e68703', price: '2 900 Kč', priceColor: '#B40808', tags: 'boty na bezky' },
+      { name: 'PM REDSTER RX ERA + M 10 GW, 156 cm', img: '/_blob/e93a5717ad87a1c878c9c4c791aa4849', price: '7 900 Kč', priceColor: '#B40808', tags: 'sjezdove lyze atomic' },
+      { name: 'ATOMIC CLOUD CL + M 10 GW Black/Or.', img: '/_blob/e103b8d56adc09d2cbfa3e9647176e29', price: '7 790 Kč', priceColor: '#B40808', tags: 'sjezdove lyze' },
+      { name: 'ATOMIC CLOUD Q9 Blue + M 10 GW Black/Or.', img: '/_blob/b858270422ce1c35ea3fb755d87a630a', price: '10 970 Kč', priceColor: '#2B3033', tags: 'sjezdove lyze' }
+    ];
+    const qn = norm((s.q || '').trim());
+    const SG = qn ? PRODS.filter((x) => qn.split(/\s+/).every((w) => norm(x.name + ' ' + x.tags).includes(w))) : [];
+    /* Miniatury podkategorií v mega menu (ukázkové fotky z webu; kde chybí, placeholder – doplní se reálné obrázky kategorií) */
+    const B = (id) => '/_blob/' + id;
+    const PRODIMG = [B('60a9456fdff1e0176aa8766acd35a1ca'), B('b0be7b43ecd1a13649ccac122713bf8d'), B('e93a5717ad87a1c878c9c4c791aa4849'), B('e103b8d56adc09d2cbfa3e9647176e29')];
+    /* Miniatury podkategorií: jen produktové fotky na bílém pozadí (jako na skol.net); kde zatím chybí, bílý placeholder */
+    const PH = B('dc5956f6e2d602109a847edfb0e95810');
+    /* Miniatura ke každé podkategorii: [blob, fit]. vždy produktová fotka na bílém (contain); kde chybí vhodná, dočasně jiná produktová fotka z nabídky – vyměnit za finální */
+    const THUMB = {
+      'Akční produkty a sety|Sety': ['d9a15f4e849efeb84ee0c2e66540a45d', 'contain'],
+      'Běžecké lyžování|Kolečkové běžky a boty': ['a422ef7c6ad7de166c0c1c1c33eaa166', 'contain'],
+      'Běžecké lyžování|Běžecké lyžování': ['265de9f4d677c1de0e5da4fba210fb08', 'contain'],
+      'Běžecké lyžování|Montáž vázání': ['ddc5cda11e38bb2b0e2c4646c4494f6b', 'contain'],
+      'Sjezdové lyžování|Sjezdové lyže': ['560ce2aec7eae5e5f6e96f7e15085074', 'contain'],
+      'Sjezdové lyžování|Sjezdové boty': ['e103b8d56adc09d2cbfa3e9647176e29', 'contain'],
+      'Sjezdové lyžování|Sjezdové helmy': ['b858270422ce1c35ea3fb755d87a630a', 'contain'],
+      'Sjezdové lyžování|Sjezdové hole': ['b469c4ca4c59915a3be63845d893f428', 'contain'],
+      'Sjezdové lyžování|Sjezdové brýle': ['e93a5717ad87a1c878c9c4c791aa4849', 'contain'],
+      'Sjezdové lyžování|Použité sjezdové lyže a boty': ['b858270422ce1c35ea3fb755d87a630a', 'contain'],
+      'Lední brusle|Dámské brusle': ['841ddbdcd61e6183e2cf60dc9f0ad2ac', 'contain'],
+      'Lední brusle|Pánské brusle': ['30c0fec96afd1d2422f20cd1c8bec843', 'contain'],
+      'Lední brusle|Dětské brusle': ['12dd60dbc0f5950e9a24bc15ab79c624', 'contain'],
+      'Oblečení|Oblečení SWIX - běžky': ['768a16d243dd47253d2d94888304f8f0', 'contain'],
+      'Oblečení|Oblečení ATOMIC': ['45aea8d263a1acc7fa813e2e58e68703', 'contain'],
+      'Oblečení|Sportovní brýle': ['16262e4b052e8d81b24742dd1c286b7f', 'contain'],
+      'Oblečení|Rukavice': ['b0be7b43ecd1a13649ccac122713bf8d', 'contain'],
+      'Oblečení|Sportovní ponožky': ['1711b0ff02d94eb98561c59cff85cd7c', 'contain'],
+      'Treking|Trekové boty': ['1711b0ff02d94eb98561c59cff85cd7c', 'contain'],
+      'Treking|Trekové hole a NW': ['b469c4ca4c59915a3be63845d893f428', 'contain'],
+      'Další sporty|In line brusle': ['841ddbdcd61e6183e2cf60dc9f0ad2ac', 'contain'],
+      'Další sporty|Ostatní zboží': ['5cef1522bad63e857d4406abd03c4b05', 'contain']
+    };
+    /* Jazykové mutace dle skol.net (hreflang): cs skol.net, en bezky-brusle.cz, sk ski-skol.sk */
+    const LANGS = [['cs', 'CZ', 'Čeština', 'https://www.skol.net/'], ['en', 'EN', 'English', 'https://www.bezky-brusle.cz/'], ['sk', 'SK', 'Slovenčina', 'https://www.ski-skol.sk/']];
+    const langOn = !!s.lang;
+    return {
+      langOpen: () => { if (desk) this.setState({ lang: true }); },
+      langClose: () => this.setState({ lang: false, h: '' }),
+      langToggle: () => this.setState({ lang: !s.lang }),
+      langShow: langOn,
+      langExpanded: langOn ? 'true' : 'false',
+      langChev: 'transition: transform 0.15s; transform: rotate(' + (langOn ? 180 : 0) + 'deg)',
+      langBtn: { style: 'display: inline-flex; align-items: center; gap: 6px; height: 36px; padding: 0 10px; border: 0; border-radius: 4px; background: ' + (langOn ? '#E8F2F8' : 'transparent') + '; color: ' + (langOn ? '#0077B3' : '#3E4A50') + '; font-family: inherit; font-size: 13px; font-weight: 600; cursor: pointer; ' + T },
+      langs: LANGS.map((l, i) => {
+        const cur = i === 0;
+        return Object.assign({ code: l[0], short: l[1], label: l[2], href: l[3], on: cur, current: cur ? 'page' : 'false',
+          chip: 'display: inline-flex; align-items: center; justify-content: center; width: 30px; height: 22px; border-radius: 3px; background: ' + (cur ? '#0077B3' : '#F2F4F5') + '; color: ' + (cur ? '#FFFFFF' : '#3E4A50') + '; font-size: 12px; font-weight: 700',
+          pill: 'display: inline-flex; align-items: center; justify-content: center; min-width: 44px; height: 36px; padding: 0 10px; box-sizing: border-box; border: 1px solid ' + (cur ? '#0077B3' : '#D0D6D9') + '; border-radius: 4px; background: ' + (cur ? '#0077B3' : '#FFFFFF') + '; color: ' + (cur ? '#FFFFFF' : '#2B3033') + '; font-size: 13px; font-weight: 700; text-decoration: none'
+        }, H('lang' + i, 'display: flex; align-items: center; gap: 10px; min-height: 40px; padding: 0 10px; border-radius: 4px; color: ' + (cur ? '#0077B3' : '#2B3033') + '; font-size: 14px; font-weight: ' + (cur ? 700 : 400) + '; text-decoration: none; ' + T, ' background: #F2F8FB; color: #0077B3;'));
+      }),
+      desk: desk,
+      mob: !desk,
+      wide: vw >= 1362,
+      gut: gut,
+      mainH: desk ? 84 : 60,
+      logoH: desk ? 40 : 30,
+      top: topLinks.map((l, i) => {
+        const red = i === 5;
+        return Object.assign({ label: l, href: ['StrankaPoradna.dc.html', 'StrankaKontakt.dc.html', 'Stranka.dc.html', 'StrankaObchodniPodminky.dc.html', 'StrankaProdejny.dc.html', 'StrankaPujcovna.dc.html', 'StrankaVelkoobchod.dc.html'][i] || 'Stranka.dc.html' }, H('top' + i, 'text-decoration: none; text-underline-offset: 3px; ' + T + 'color: ' + (red ? '#B40808' : '#3E4A50') + ';' + (red ? ' font-weight: 600;' : ''), ' color: ' + (red ? '#8E0606' : '#0077B3') + '; text-decoration: underline;'));
+      }),
+      logo: H('logo', 'display: flex; flex-shrink: 0; ' + T, ' opacity: 0.8;'),
+      search: H('search', 'display: flex; align-items: center; height: 44px; box-sizing: border-box; border: 1px solid #87929A; border-radius: 4px; background: #FFFFFF; ' + T, ' border-color: #2B3033; box-shadow: 0 0 0 1px #2B3033;'),
+      phone: H('phone', 'font-size: 14px; font-weight: 600; text-underline-offset: 3px; ' + T, ' color: #0077B3; text-decoration: underline;'),
+      mail: H('mail', 'font-size: 14px; font-weight: 600; text-underline-offset: 3px; ' + T, ' color: #0077B3; text-decoration: underline;'),
+      login: H('login', iconBtn + 'border: 0; background: transparent; font-family: inherit; cursor: pointer; ', ' background: #F2F8FB; color: #0077B3;'),
+      cart: H('cart', iconBtn, ' background: #F2F8FB; color: #0077B3;'),
+      burger: H('burger', 'display: inline-flex; align-items: center; justify-content: center; width: 48px; height: 48px; margin-left: 6px; border: 0; border-radius: 6px; background: ' + (open ? '#2E4047' : '#0077B3') + '; color: #FFFFFF; cursor: pointer; ' + T, ' background: ' + (open ? '#1F2D33' : '#005F8F') + ';'),
+      q: s.q || '',
+      hasQ: !!s.q,
+      onQ: (e) => this.setState({ q: e.target.value }),
+      clearQ: () => this.setState({ q: '' }),
+      clr: H('clr', 'display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; width: 36px; height: 36px; margin-right: 4px; padding: 0; border: 0; border-radius: 4px; background: transparent; color: #5A666C; cursor: pointer; ' + T, ' background: #F2F8FB; color: #0077B3;'),
+      openLogin: () => this.setState({ login: true, open: false, h: '' }),
+      closeLogin: () => this.setState({ login: false, pw: false, h: '' }),
+      loginOpen: !!s.login,
+      lgPad: vw >= 550 ? 32 : 20,
+      pwType: s.pw ? 'text' : 'password',
+      pwShown: !!s.pw,
+      pwHidden: !s.pw,
+      pwLabel: s.pw ? 'Skrýt heslo' : 'Zobrazit heslo',
+      pwPressed: s.pw ? 'true' : 'false',
+      togglePw: () => this.setState({ pw: !s.pw }),
+      lgClose: H('lgClose', 'position: absolute; top: 12px; right: 12px; display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; padding: 0; border: 0; border-radius: 4px; background: transparent; color: #5A666C; cursor: pointer; ' + T, ' background: #F2F8FB; color: #0077B3;'),
+      lgEye: H('lgEye', 'display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; width: 44px; height: 100%; padding: 0; border: 0; background: transparent; color: #5A666C; cursor: pointer; ' + T, ' color: #0077B3;'),
+      lgSubmit: H('lgSubmit', 'display: flex; align-items: center; justify-content: center; min-height: 52px; margin-top: 4px; border: 0; border-radius: 4px; background: #0077B3; color: #FFFFFF; font: inherit; font-size: 16px; font-weight: 700; cursor: pointer; ' + T, ' background: #005F8F; box-shadow: 0 6px 16px rgba(0, 95, 143, 0.28);'),
+      lgForgot: H('lgForgot', 'font-size: 14px; color: #0077B3; text-decoration: none; text-underline-offset: 3px; ' + T, ' color: #005F8F; text-decoration: underline;'),
+      lgReg: H('lgReg', 'font-weight: 700; color: #0077B3; text-decoration: none; text-underline-offset: 3px; ' + T, ' color: #005F8F; text-decoration: underline;'),
+      lgB2b: H('lgB2b', 'display: flex; align-items: center; justify-content: center; gap: 8px; min-height: 48px; border: 1px solid #0077B3; border-radius: 4px; background: #FFFFFF; color: #0077B3; font-size: 15px; font-weight: 600; text-decoration: none; ' + T, ' background: #0077B3; color: #FFFFFF;'),
+      mcOpen: () => this.setState({ mc: true }),
+      mcClose: () => this.setState({ mc: false }),
+      mcShow: desk && !!s.mc,
+      mcExpanded: desk && s.mc ? 'true' : 'false',
+      noCart: n === 0,
+      mcItems: [
+        { img: '/_blob/b0be7b43ecd1a13649ccac122713bf8d', name: 'SPINE RS ENERGY 258', variant: 'Velikost EU: 42', qty: 1, price: '2 290 Kč', priceColor: '#B40808' },
+        { img: '/_blob/60a9456fdff1e0176aa8766acd35a1ca', name: 'set FISCHER Fibre Crown + vázání Tour Step IN', variant: 'Délka lyží (cm): 189', qty: 1, price: '2 999 Kč', priceColor: '#B40808' }
+      ].map((x, i) => Object.assign(x, { rm: H('mcrm' + i, 'display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px; padding: 0; border: 0; border-radius: 4px; background: transparent; color: #5A666C; cursor: pointer; ' + T, ' background: #FCEEEE; color: #B40808;') })),
+      mcTotal: '5 289 Kč',
+      mcGo: H('mcGo', 'display: flex; align-items: center; justify-content: center; gap: 8px; min-height: 48px; border-radius: 4px; background: #007A1A; color: #FFFFFF; font-size: 15px; font-weight: 700; text-decoration: none; ' + T, ' background: #005C14;'),
+      sg: SG.slice(0, 5).map((x, i) => Object.assign({}, x, H('sg' + i, 'display: flex; align-items: center; gap: 12px; padding: 8px 14px; border-bottom: 1px solid #F0F2F3; color: #2B3033; text-decoration: none; ' + T, ' background: #F2F8FB; color: #0077B3;'))),
+      sgAny: SG.length > 0,
+      sgNone: !!s.q && SG.length === 0,
+      sgCount: SG.length,
+      sgAll: H('sgAll', 'display: flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; background: #F6F7F7; color: #0077B3; font-weight: 700; text-decoration: none; ' + T, ' background: #E8F2F8;'),
+      cartCount: n,
+      hasCart: n > 0,
+      cartLabel: 'Košík, ' + n + ' ks',
+      menuOpen: open,
+      menuClosed: !open,
+      menuLabel: open ? 'Zavřít menu' : 'Otevřít menu',
+      menuExpanded: open ? 'true' : 'false',
+      toggleMenu: () => this.setState({ open: !s.open }),
+      megaClose: () => this.setState({ mega: null }),
+      megaOpen: mega != null,
+      megaCols: vw >= 1362 ? 4 : 3,
+      mega: mega == null ? { label: '', subs: [] } : {
+        label: CATS[mega][0],
+        subs: CATS[mega][1].map((x, i) => { const t = THUMB[CATS[mega][0] + '|' + x[0]]; const im = t ? B(t[0]) : PH; return Object.assign({ label: x[0], img: im, hasImg: true, noImg: false, ph: '#FFFFFF', fit: t ? t[1] : 'contain', hasKids: x[1].length > 0,
+          kids: x[1].map((y, j) => Object.assign({ label: y }, H('kid' + i + '_' + j, 'display: block; padding: 4px 0; color: #3E4A50; font-size: 14px; line-height: 1.35; text-decoration: none; text-underline-offset: 3px; ' + T, ' color: #0077B3; text-decoration: underline;'))) },
+          H('sub' + i, 'display: flex; align-items: center; gap: 12px; padding: 2px 0; color: #2B3033; font-weight: 700; line-height: 1.3; text-decoration: none; ' + T, ' color: #0077B3;')); })
+      },
+      cats: CATS.map((c, i) => {
+        const on = c[0] === active || (desk && s.mega === i);
+        return {
+          label: c[0],
+          hasSub: c[1].length > 0,
+          expanded: mega === i ? 'true' : 'false',
+          enter: () => this.setState({ mega: i }),
+          chev: 'transition: transform 0.15s; transform: rotate(' + (mega === i ? 180 : 0) + 'deg)',
+          style: 'display: inline-flex; align-items: center; gap: 6px; flex-shrink: 0; height: 48px; padding: 0 ' + navPad + 'px; color: #FFFFFF; font-size: ' + navFs + 'px; font-weight: 700; text-decoration: none; white-space: nowrap; ' + T + (i === 0 ? 'margin-left: -' + navPad + 'px; ' : '') + (i === CATS.length - 1 ? 'margin-right: -' + navPad + 'px; ' : '') + (on ? 'background: #005F8F; ' : '') + (c[0] === active ? 'box-shadow: inset 0 -4px 0 #FF4F45;' : '')
+        };
+      }),
+      mcats: CATS.map((c, i) => Object.assign({ label: c[0] }, H('m' + i, 'display: flex; align-items: center; justify-content: space-between; min-height: 52px; padding: 0 ' + gut + 'px; border-bottom: 1px solid #E1E5E7; color: #2B3033; font-weight: 600; text-decoration: none; ' + T, ' background: #F2F8FB; color: #0077B3;')))
+    };
+  }
+}
+</script>
+</body>
+</html>
